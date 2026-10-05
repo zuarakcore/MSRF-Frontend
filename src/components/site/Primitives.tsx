@@ -100,6 +100,39 @@ export function StatBlock({ value, label }: { value: string; label: string }) {
   );
 }
 
+/** Placeholder for API-backed lists: loading, empty and error states share one look. */
+export function ContentStatus({
+  children,
+  tone = "muted",
+  onRetry,
+  className = "",
+}: {
+  children: ReactNode;
+  tone?: "muted" | "error";
+  onRetry?: () => void;
+  className?: string;
+}) {
+  return (
+    <div
+      role={tone === "error" ? "alert" : "status"}
+      className={`rounded-3xl border border-dashed border-border px-6 py-12 text-center text-sm ${
+        tone === "error" ? "text-destructive" : "text-muted-foreground"
+      } ${className}`}
+    >
+      <p>{children}</p>
+      {onRetry ? (
+        <button
+          type="button"
+          onClick={onRetry}
+          className="mt-4 rounded-full border border-border px-5 py-2 text-xs font-semibold text-foreground transition-colors hover:border-accent hover:text-accent"
+        >
+          Try again
+        </button>
+      ) : null}
+    </div>
+  );
+}
+
 export function BallIcon({ className = "h-5 w-5" }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="1.4">

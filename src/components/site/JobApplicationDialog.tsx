@@ -3,7 +3,7 @@
 import { useRef, useState, type ChangeEvent, type DragEvent } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
+import { ApiError, api } from "@/lib/api";
 import {
   Dialog,
   DialogContent,
@@ -39,7 +39,15 @@ type Errors = {
 const field =
   "mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-accent";
 
-export function JobApplicationDialog({ trigger, jobTitle }: { trigger: React.ReactNode; jobTitle: string }) {
+export function JobApplicationDialog({
+  trigger,
+  jobId,
+  jobTitle,
+}: {
+  trigger: React.ReactNode;
+  jobId: string;
+  jobTitle: string;
+}) {
   const [open, setOpen] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [errors, setErrors] = useState<Errors>({});
@@ -109,37 +117,24 @@ export function JobApplicationDialog({ trigger, jobTitle }: { trigger: React.Rea
     setSubmitting(true);
     setProgress(15);
     try {
-      const ext = file.name.split('.').pop();
-      const path = `${new Date().toISOString().slice(0, 10)}/${crypto.randomUUID()}.${ext}`;
-      const upload = await supabase.storage.from("resumes").upload(path, file, {
-        contentType: file.type,
-        upsert: false,
-      });
-      if (upload.error) throw upload.error;
-      setProgress(70);
-
       const values = parsed.data;
-      // Note: Make sure the job_applications table exists in Supabase.
-      const insert = await (supabase.from as any)("job_applications").insert({
-        job_title: jobTitle,
-        full_name: values.fullName,
-        mobile_number: values.mobileNumber,
-        email_address: values.emailAddress,
-        location: values.location,
-        cv_path: path,
-      });
-      if (insert.error) throw insert.error;
+      const body = new FormData();
+      body.append("fullName", values.fullName);
+      body.append("mobileNumber", values.mobileNumber);
+      body.append("emailAddress", values.emailAddress);
+      body.append("location", values.location);
+      body.append("cv", file);
+      setProgress(50);
+      const result = await api.applyForJob(jobId, body);
 
       setProgress(100);
-      toast.success("Application submitted successfully!", {
-        description: "Our HR team will review your CV and get back to you.",
-      });
+      toast.success("Application submitted successfully!", { description: result.detail });
       reset();
       setOpen(false);
     } catch (error) {
       console.error(error);
       toast.error("We couldn't submit your application", {
-        description: "Please check your connection or database configuration and try again.",
+        description: error instanceof ApiError ? error.message : "Please check your connection and try again.",
       });
       setProgress(0);
     } finally {

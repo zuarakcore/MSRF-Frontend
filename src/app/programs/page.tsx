@@ -2,13 +2,16 @@
 
 
 import { Reveal } from "@/components/site/Reveal";
-import { ActionLink, Section, SectionHead } from "@/components/site/Primitives";
+import { ActionLink, ContentStatus, Section, SectionHead } from "@/components/site/Primitives";
 import { PageHero } from "@/components/site/PageHero";
-import { img, programs } from "@/lib/site-data";
+import { useProgrammes } from "@/hooks/use-site-content";
+import { img } from "@/lib/site-data";
 
 export default Programs;
 
 function Programs() {
+  const { data: programs, isPending, isError, refetch } = useProgrammes();
+
   return (
     <>
       <PageHero
@@ -24,17 +27,26 @@ function Programs() {
       />
 
       <Section>
+        {isPending ? (
+          <ContentStatus>Loading programmes…</ContentStatus>
+        ) : isError ? (
+          <ContentStatus tone="error" onRetry={() => refetch()}>
+            We couldn&apos;t load the programmes right now.
+          </ContentStatus>
+        ) : programs.length === 0 ? (
+          <ContentStatus>New programmes will be announced soon.</ContentStatus>
+        ) : null}
         <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {programs.map((program, index) => (
-            <Reveal key={program.slug} delay={(index % 3) * 90}>
+          {programs?.map((program, index) => (
+            <Reveal key={program.id} delay={(index % 3) * 90}>
               <article className="glass lift flex h-full flex-col rounded-3xl p-8">
                 <div className="flex items-start justify-between gap-4">
-                  <p className="eyebrow">{program.age}</p>
+                  <p className="eyebrow">{program.ageGroup}</p>
                 </div>
-                <h2 className="mt-5 text-2xl">{program.name}</h2>
+                <h2 className="mt-5 text-2xl">{program.title}</h2>
                 <p className="mt-4 text-sm text-muted-foreground">{program.description}</p>
                 <div className="mt-8 pt-1">
-                  <ActionLink href="/contact" variant="ghost">
+                  <ActionLink href={`/contact?programme=${program.id}`} variant="ghost">
                     Enquire
                   </ActionLink>
                 </div>

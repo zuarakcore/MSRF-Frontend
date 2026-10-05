@@ -7,23 +7,29 @@ import 'swiper/css';
 import { Reveal } from "@/components/site/Reveal";
 import type { RevealPreset } from "@/components/site/Reveal";
 import { PaymentSection } from "@/components/site/PaymentSection";
-import { ActionLink, Eyebrow, Section, SectionHead, StatBlock, BallIcon } from "@/components/site/Primitives";
+import { ActionLink, ContentStatus, Eyebrow, Section, SectionHead, StatBlock, BallIcon } from "@/components/site/Primitives";
+import { useProgrammes, useTeamMembers } from "@/hooks/use-site-content";
 import {
   club,
-  events,
   heroStats,
   img,
   journey,
   missionPillars,
   partnership,
-  programs,
-  team,
   visionPillars,
 } from "@/lib/site-data";
 
 export default Home;
 
 function Home() {
+  const programmes = useProgrammes();
+  // Programmes with a date from today on, soonest first, shown as upcoming events.
+  const today = new Date().toLocaleDateString("en-CA");
+  const events = (programmes.data ?? [])
+    .filter((p) => p.date && p.date >= today)
+    .sort((a, b) => a.date!.localeCompare(b.date!));
+  const team = useTeamMembers();
+
   return (
     <>
       {/* Hero */}
@@ -183,15 +189,22 @@ function Home() {
             </ActionLink>
           </Reveal>
         </div>
+        {programmes.isPending ? (
+          <ContentStatus className="mt-14">Loading programmes…</ContentStatus>
+        ) : programmes.isError ? (
+          <ContentStatus tone="error" className="mt-14" onRetry={() => programmes.refetch()}>
+            We couldn&apos;t load the programmes right now.
+          </ContentStatus>
+        ) : null}
         <div className="mt-14 grid gap-6 md:grid-cols-3">
-          {programs.slice(0, 3).map((program, index) => (
-            <Reveal key={program.slug} delay={index * 100}>
+          {programmes.data?.slice(0, 3).map((program, index) => (
+            <Reveal key={program.id} delay={index * 100}>
               <article className="glass lift flex h-full flex-col rounded-3xl p-8">
-                <Eyebrow>{program.age}</Eyebrow>
-                <h3 className="mt-4 text-2xl">{program.name}</h3>
+                <Eyebrow>{program.ageGroup}</Eyebrow>
+                <h3 className="mt-4 text-2xl">{program.title}</h3>
                 <p className="mt-4 text-sm text-muted-foreground">{program.description}</p>
                 <Link
-                  href="/contact"
+                  href={`/contact?programme=${program.id}`}
                   className="mt-auto pt-8 inline-flex items-center gap-2 text-sm font-semibold text-accent"
                 >
                   Enquiry <span aria-hidden>→</span>
@@ -300,21 +313,55 @@ function Home() {
             <SectionHead eyebrow="Upcoming" title="Camps, trials and Argentina visits" />
           </Reveal>
         </div>
-        <div className="mt-14 divide-y divide-border border-y border-border">
+        {programmes.isPending ? (
+          <ContentStatus className="mt-14">Loading upcoming events…</ContentStatus>
+        ) : programmes.isError ? (
+          <ContentStatus tone="error" className="mt-14" onRetry={() => programmes.refetch()}>
+            We couldn&apos;t load the upcoming events right now.
+          </ContentStatus>
+        ) : events.length === 0 ? (
+          <Reveal>
+            <div className="glass relative mt-14 overflow-hidden rounded-[2rem] px-8 py-12 text-center md:px-14 md:py-16">
+              <div
+                className="pointer-events-none absolute -top-1/2 left-1/2 h-[40vh] w-[40vw] -translate-x-1/2 opacity-20 blur-3xl"
+                style={{ background: "radial-gradient(circle, var(--accent), transparent 65%)" }}
+              />
+              <div className="relative mx-auto flex max-w-xl flex-col items-center">
+                <span className="flex h-14 w-14 items-center justify-center rounded-full border border-accent/40 bg-accent/10 text-accent">
+                  <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden>
+                    <rect x="3" y="4.5" width="18" height="16" rx="2.5" />
+                    <path d="M3 9.5h18M8 2.5v4M16 2.5v4" />
+                  </svg>
+                </span>
+                <h3 className="mt-6 text-2xl md:text-3xl">No upcoming events as of now</h3>
+                <p className="mt-3 text-sm text-muted-foreground">
+                  New camps, trials and Argentina visits will be announced here soon. Get in touch to hear about the
+                  next one first.
+                </p>
+                <div className="mt-8">
+                  <ActionLink href="/contact" variant="ghost">
+                    Contact us
+                  </ActionLink>
+                </div>
+              </div>
+            </div>
+          </Reveal>
+        ) : null}
+        <div className={`mt-14 divide-y divide-border border-y border-border ${events.length === 0 ? "hidden" : ""}`}>
           {events.map((event, index) => (
-            <Reveal key={event.title} delay={index * 90}>
+            <Reveal key={event.id} delay={index * 90}>
               <Link
-                href="/contact"
+                href={`/contact?programme=${event.id}`}
                 className="group flex flex-wrap items-center justify-between gap-6 py-8 transition-colors hover:bg-surface"
               >
                 <div className="flex items-center gap-8">
                   <span className="font-[family-name:var(--font-display)] text-sm font-bold tracking-[0.2em] text-accent">
-                    {new Date(event.date).toLocaleDateString("en-IN", { day: "2-digit", month: "short" })}
+                    {new Date(`${event.date}T00:00:00`).toLocaleDateString("en-IN", { day: "2-digit", month: "short" })}
                   </span>
                   <div>
                     <h3 className="text-xl">{event.title}</h3>
                     <p className="mt-1 text-sm text-muted-foreground">
-                      {event.kind} · {event.place}
+                      {[event.kind ?? event.ageGroup, event.place].filter(Boolean).join(" · ")}
                     </p>
                   </div>
                 </div>
@@ -343,6 +390,14 @@ function Home() {
             </ActionLink>
           </Reveal>
         </div>
+        {team.isPending ? (
+          <ContentStatus className="mt-14">Loading the board…</ContentStatus>
+        ) : team.isError ? (
+          <ContentStatus tone="error" className="mt-14" onRetry={() => team.refetch()}>
+            We couldn&apos;t load the board right now.
+          </ContentStatus>
+        ) : null}
+        {team.data?.length ? (
         <Reveal delay={240}>
           <div className="mt-14">
           <Swiper
@@ -354,18 +409,23 @@ function Home() {
               1024: { slidesPerView: 4 },
             }}
             autoplay={{ delay: 3000, disableOnInteraction: false }}
-            loop={true}
+            // Swiper's loop mode needs more slides than are visible at once.
+            loop={team.data.length > 4}
           >
-            {team.map((member, index) => (
-              <SwiperSlide key={member.name}>
+            {team.data.map((member) => (
+              <SwiperSlide key={member.id}>
                 <article className="lift group overflow-hidden rounded-3xl border border-border bg-card">
                   <div className="aspect-[3/4] overflow-hidden flex items-center justify-center bg-muted">
-                    <span className="text-8xl font-bold text-muted-foreground/30 uppercase">
-                      {member.name.charAt(0)}
-                    </span>
+                    {member.photoUrl ? (
+                      <img src={member.photoUrl} alt={member.name} loading="lazy" className="h-full w-full object-cover" />
+                    ) : (
+                      <span className="text-8xl font-bold text-muted-foreground/30 uppercase">
+                        {member.name.charAt(0)}
+                      </span>
+                    )}
                   </div>
                   <div className="p-6">
-                    <p className="eyebrow">{member.role}</p>
+                    <p className="eyebrow">{member.designation}</p>
                     <h3 className="mt-3 text-base">{member.name}</h3>
                   </div>
                 </article>
@@ -374,6 +434,7 @@ function Home() {
           </Swiper>
           </div>
         </Reveal>
+        ) : null}
       </Section>
 
       {/* Payment confirmation */}

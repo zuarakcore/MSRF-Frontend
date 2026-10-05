@@ -2,13 +2,16 @@
 
 
 import { Reveal } from "@/components/site/Reveal";
-import { ActionLink, Section, SectionHead, StatBlock } from "@/components/site/Primitives";
+import { ActionLink, ContentStatus, Section, SectionHead, StatBlock } from "@/components/site/Primitives";
 import { PageHero } from "@/components/site/PageHero";
-import { club, img, missionPillars, roadmap, trustPoints, visionPillars, team } from "@/lib/site-data";
+import { useTeamMembers } from "@/hooks/use-site-content";
+import { club, img, missionPillars, roadmap, trustPoints, visionPillars } from "@/lib/site-data";
 
 export default About;
 
 function About() {
+  const { data: team, isPending: teamLoading, isError: teamError, refetch: refetchTeam } = useTeamMembers();
+
   return (
     <>
       <PageHero
@@ -136,19 +139,32 @@ function About() {
             align="center"
           />
         </Reveal>
+        {teamLoading ? (
+          <ContentStatus className="mt-16">Loading the board…</ContentStatus>
+        ) : teamError ? (
+          <ContentStatus tone="error" className="mt-16" onRetry={() => refetchTeam()}>
+            We couldn&apos;t load the team right now.
+          </ContentStatus>
+        ) : null}
         <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          {team.map((member, index) => (
-            <Reveal key={member.name} delay={(index % 3) * 90}>
+          {team?.map((member, index) => (
+            <Reveal key={member.id} delay={(index % 3) * 90}>
               <article className="lift group h-full overflow-hidden rounded-3xl border border-border bg-card">
                 <div className="h-48 w-full overflow-hidden flex items-center justify-center bg-muted transition-transform duration-700 group-hover:scale-105">
-                  <span className="text-8xl font-bold text-muted-foreground/30 uppercase">
-                    {member.name.charAt(0)}
-                  </span>
+                  {member.photoUrl ? (
+                    <img src={member.photoUrl} alt={member.name} loading="lazy" className="h-full w-full object-cover" />
+                  ) : (
+                    <span className="text-8xl font-bold text-muted-foreground/30 uppercase">
+                      {member.name.charAt(0)}
+                    </span>
+                  )}
                 </div>
                 <div className="p-7">
-                  <p className="eyebrow">{member.role}</p>
+                  <p className="eyebrow">{member.designation}</p>
                   <h2 className="mt-3 text-lg">{member.name}</h2>
-                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{member.detail}</p>
+                  {member.biography ? (
+                    <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{member.biography}</p>
+                  ) : null}
                 </div>
               </article>
             </Reveal>

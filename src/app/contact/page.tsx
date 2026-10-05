@@ -1,16 +1,56 @@
 "use client";
 
 
-import { useState } from "react";
+import { useEffect, useState, type FormEvent } from "react";
+import { toast } from "sonner";
 import { Reveal } from "@/components/site/Reveal";
 import { Section, SectionHead } from "@/components/site/Primitives";
 import { PageHero } from "@/components/site/PageHero";
-import { club, img, programs } from "@/lib/site-data";
+import { useProgrammes } from "@/hooks/use-site-content";
+import { ApiError, api } from "@/lib/api";
+import { club, img } from "@/lib/site-data";
 
 export default Contact;
 
 function Contact() {
   const [sent, setSent] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [programmeId, setProgrammeId] = useState("");
+  const { data: programs, isPending: programmesLoading } = useProgrammes();
+
+  // "Enquire" links on programme cards pass ?programme=<id>. Read it here rather than with
+  // useSearchParams so the page can still be prerendered without a Suspense boundary.
+  useEffect(() => {
+    const preselected = new URLSearchParams(window.location.search).get("programme");
+    if (preselected) setProgrammeId(preselected);
+  }, []);
+
+  const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    const text = (name: string) => String(data.get(name) ?? "").trim();
+    setSubmitting(true);
+    setError(null);
+    try {
+      await api.createEnquiry({
+        parentName: text("parentName"),
+        playerName: text("playerName") || null,
+        phone: text("phone"),
+        email: text("email") || null,
+        // Ignore a stale ?programme= id that is not an active programme.
+        programmeId: programs?.some((p) => p.id === programmeId) ? programmeId : null,
+        message: text("message"),
+      });
+      setSent(true);
+    } catch (err) {
+      const message = err instanceof ApiError ? err.message : "Please try again.";
+      setError(message);
+      toast.error("We couldn't send your enquiry", { description: message });
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <>
@@ -40,15 +80,14 @@ function Contact() {
             ) : (
               <form
                 className="mt-10 grid gap-5 sm:grid-cols-2"
-                onSubmit={(event) => {
-                  event.preventDefault();
-                  setSent(true);
-                }}
+                onSubmit={onSubmit}
               >
                 <label className="text-sm">
                   <span className="text-muted-foreground">Parent / guardian name</span>
                   <input
+                    name="parentName"
                     required
+                    minLength={2}
                     maxLength={120}
                     className="mt-2 w-full rounded-2xl border border-input bg-background px-4 py-3 text-sm outline-none transition-colors focus:border-accent"
                   />
@@ -56,6 +95,7 @@ function Contact() {
                 <label className="text-sm">
                   <span className="text-muted-foreground">Player name</span>
                   <input
+                    name="playerName"
                     required
                     maxLength={120}
                     className="mt-2 w-full rounded-2xl border border-input bg-background px-4 py-3 text-sm outline-none transition-colors focus:border-accent"
@@ -64,6 +104,7 @@ function Contact() {
                 <label className="text-sm">
                   <span className="text-muted-foreground">Phone</span>
                   <input
+                    name="phone"
                     required
                     type="tel"
                     maxLength={20}
@@ -73,6 +114,7 @@ function Contact() {
                 <label className="text-sm">
                   <span className="text-muted-foreground">Email</span>
                   <input
+                    name="email"
                     required
                     type="email"
                     maxLength={255}
@@ -82,12 +124,15 @@ function Contact() {
                 <label className="text-sm sm:col-span-2">
                   <span className="text-muted-foreground">Programme of interest</span>
                   <select
+                    name="programmeId"
+                    value={programmeId}
+                    onChange={(event) => setProgrammeId(event.target.value)}
                     className="mt-2 w-full rounded-2xl border border-input bg-background px-4 py-3 text-sm outline-none transition-colors focus:border-accent"
-                    defaultValue={programs[0]?.name}
                   >
-                    {programs.map((program) => (
-                      <option key={program.slug} value={program.name}>
-                        {program.name} · {program.age}
+                    <option value="">{programmesLoading ? "Loading programmes…" : "Not sure yet"}</option>
+                    {programs?.map((program) => (
+                      <option key={program.id} value={program.id}>
+                        {program.title} · {program.ageGroup}
                       </option>
                     ))}
                   </select>
@@ -95,17 +140,25 @@ function Contact() {
                 <label className="text-sm sm:col-span-2">
                   <span className="text-muted-foreground">Message</span>
                   <textarea
+                    name="message"
+                    required
                     rows={4}
-                    maxLength={1000}
+                    maxLength={2000}
                     className="mt-2 w-full rounded-2xl border border-input bg-background px-4 py-3 text-sm outline-none transition-colors focus:border-accent"
                   />
                 </label>
                 <div className="sm:col-span-2">
+                  {error ? (
+                    <p role="alert" className="mb-4 text-sm text-destructive">
+                      {error}
+                    </p>
+                  ) : null}
                   <button
                     type="submit"
-                    className="w-full rounded-full bg-accent px-7 py-3.5 text-sm font-semibold text-accent-foreground transition-all duration-500 hover:brightness-110 sm:w-auto"
+                    disabled={submitting}
+                    className="w-full rounded-full bg-accent px-7 py-3.5 text-sm font-semibold text-accent-foreground transition-all duration-500 hover:brightness-110 disabled:opacity-60 sm:w-auto"
                   >
-                    Submit enquiry
+                    {submitting ? "Sending…" : "Submit enquiry"}
                   </button>
                 </div>
               </form>

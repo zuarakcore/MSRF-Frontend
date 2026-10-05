@@ -3,7 +3,7 @@
 import { useRef, useState, type ChangeEvent, type DragEvent } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
+import { ApiError, api } from "@/lib/api";
 import { Progress } from "@/components/ui/progress";
 import { PageHero } from "@/components/site/PageHero";
 
@@ -121,46 +121,29 @@ export default function SubmitPaymentProofPage() {
     setSubmitting(true);
     setProgress(15);
     try {
-      let path = null;
-      if (paymentMethod === "UPI" && file) {
-        const ext = file.type.toLowerCase() === "image/png" ? "png" : "jpg";
-        path = `${new Date().toISOString().slice(0, 10)}/${crypto.randomUUID()}.${ext}`;
-        const upload = await supabase.storage.from("payment-proofs").upload(path, file, {
-          contentType: file.type,
-          upsert: false,
-        });
-        if (upload.error) throw upload.error;
-      }
-      setProgress(70);
-
       const values = parsed.data;
-      
-      // Note: If you haven't added payment_method and handed_over_to columns to your Supabase table, this might fail.
-      const payload: any = {
-        student_name: values.studentName,
-        parent_mobile: values.parentMobile,
-        amount: Number(values.amount),
-        payment_date: values.paymentDate,
-        payment_method: values.paymentMethod,
-      };
-
-      if (path) payload.screenshot_path = path;
+      const body = new FormData();
+      body.append("studentName", values.studentName);
+      body.append("parentMobile", values.parentMobile);
+      body.append("paymentMethod", values.paymentMethod);
+      body.append("amount", values.amount);
+      body.append("paymentDate", values.paymentDate);
       if (values.paymentMethod === "Cash" && values.handedOverTo) {
-          payload.handed_over_to = values.handedOverTo;
+        body.append("handedOverTo", values.handedOverTo);
       }
-
-      const insert = await supabase.from("payment_submissions").insert(payload);
-      if (insert.error) throw insert.error;
+      if (values.paymentMethod === "UPI" && file) body.append("screenshot", file);
+      setProgress(50);
+      const created = await api.submitPayment(body);
 
       setProgress(100);
       toast.success("Payment submitted successfully!", {
-        description: "Our team will verify your payment and update the status shortly.",
+        description: `Reference ${created.submissionNumber}. Our team will verify your payment and update the status shortly.`,
       });
       reset();
     } catch (error) {
       console.error(error);
       toast.error("We couldn't submit your payment", {
-        description: "Please check your connection and try again.",
+        description: error instanceof ApiError ? error.message : "Please check your connection and try again.",
       });
       setProgress(0);
     } finally {
