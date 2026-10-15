@@ -1,0 +1,11 @@
+.git
+.github
+.next
+node_modules
+deploy
+supabase
+Dockerfile
+.dockerignore
+*.log
+*.tsbuildinfo
+.DS_Store

@@ -1,0 +1,36 @@
+# Production stack on the server at /srv/msrf/website (copied there by CI on every deploy).
+#
+#   IMAGE_TAG=<git sha> docker compose up -d      (deploy.sh does this; do not run by hand without a tag)
+#
+# Joins the shared `edge` network only; Caddy (/srv/msrf/proxy) reaches it as msrf-website:3000.
+# Pages fetch the API from the browser, so the container needs no access to the backend.
+name: msrf-website
+
+services:
+  web:
+    image: ghcr.io/zuarakcore/msrf-website:${IMAGE_TAG:?set IMAGE_TAG}
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /app/.next/cache:uid=1000,gid=1000
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    networks:
+      edge:
+        aliases: [msrf-website]
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:3000/').then(r => process.exit(r.ok ? 0 : 1), () => process.exit(1))"
+      interval: 15s
+      timeout: 5s
+      start_period: 15s
+      retries: 3
+    mem_limit: 512m
+
+networks:
+  edge:
+    external: true

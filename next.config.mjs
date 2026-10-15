@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  // Production runs `node server.js` from .next/standalone inside Docker (see Dockerfile).
+  output: 'standalone',
+  poweredByHeader: false,
   async rewrites() {
     return [
       {
