@@ -9,7 +9,7 @@ import train2 from "@/assets/train-2.jpg.asset.json";
 import train3 from "@/assets/train-3.jpg.asset.json";
 import train4 from "@/assets/train-4.jpg.asset.json";
 import ajVisit from "@/assets/aj-visit.jpg";
-import contactBanner from "@/assets/contact-banner.jpg";
+import contactBanner from "@/assets/contact-banner.webp";
 import squad1 from "@/assets/squad-1.jpg.asset.json";
 import squad2 from "@/assets/squad-2.jpg.asset.json";
 import squadWide from "@/assets/squad-wide.jpg.asset.json";
@@ -41,6 +41,13 @@ export const club = {
   website: "www.malabarchallengersfc.com",
   base: "Kozhikode, Keralam, India",
   hours: "Monday – Saturday · 10:00 AM – 5:00 PM",
+  /** Official profile URLs. The footer shows an icon only for the ones filled in. */
+  social: {
+    instagram: "",
+    facebook: "",
+    youtube: "",
+    x: "",
+  },
 };
 
 export const heroStats = [

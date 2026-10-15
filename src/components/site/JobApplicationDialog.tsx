@@ -13,6 +13,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Progress } from "@/components/ui/progress";
+import { CAPTCHA_PENDING_MESSAGE, TURNSTILE_ENABLED, Turnstile, type TurnstileHandle } from "@/components/site/Turnstile";
+import { errorProps, focusFirstError, invalidClass } from "@/lib/form-errors";
 
 const MAX_BYTES = 5 * 1024 * 1024; // 5 MB
 const ACCEPTED = ["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
@@ -34,7 +36,11 @@ type Errors = {
   emailAddress?: string | undefined;
   location?: string | undefined;
   cv?: string | undefined;
+  captcha?: string | undefined;
 };
+
+// Top-to-bottom order of the fields, for moving focus to the first error.
+const FIELD_ORDER = ["fullName", "mobileNumber", "emailAddress", "location", "cv", "captcha"] as const;
 
 const field =
   "mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-accent";
@@ -56,6 +62,8 @@ export function JobApplicationDialog({
   const [dragging, setDragging] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
+  const turnstileRef = useRef<TurnstileHandle>(null);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
 
   const acceptFile = (candidate: File | undefined) => {
     if (!candidate) return;
@@ -80,6 +88,7 @@ export function JobApplicationDialog({
     removeFile();
     setErrors({});
     setProgress(0);
+    setCaptchaToken(null); // the widget unmounts with the dialog; a fresh one renders on reopen
     formRef.current?.reset();
   };
 
@@ -107,10 +116,12 @@ export function JobApplicationDialog({
       }
     }
     if (!file) nextErrors.cv = "Upload your CV";
+    if (TURNSTILE_ENABLED && !captchaToken) nextErrors.captcha = CAPTCHA_PENDING_MESSAGE;
     setErrors(nextErrors);
-    
-    if (!parsed.success || !file) {
+
+    if (!parsed.success || !file || nextErrors.captcha) {
       toast.error("Please fix the highlighted fields");
+      focusFirstError(nextErrors, FIELD_ORDER);
       return;
     }
 
@@ -124,6 +135,7 @@ export function JobApplicationDialog({
       body.append("emailAddress", values.emailAddress);
       body.append("location", values.location);
       body.append("cv", file);
+      if (captchaToken) body.append("captchaToken", captchaToken);
       setProgress(50);
       const result = await api.applyForJob(jobId, body);
 
@@ -139,6 +151,7 @@ export function JobApplicationDialog({
       setProgress(0);
     } finally {
       setSubmitting(false);
+      turnstileRef.current?.reset();
     }
   };
 
@@ -167,8 +180,8 @@ export function JobApplicationDialog({
             <label htmlFor="fullName" className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
               Full Name*
             </label>
-            <input id="fullName" name="fullName" className={field} placeholder="Your full name" />
-            {errors.fullName ? <p className="mt-2 text-xs text-destructive">{errors.fullName}</p> : null}
+            <input id="fullName" name="fullName" {...errorProps("fullName", errors.fullName)} className={field + invalidClass(errors.fullName)} placeholder="Your full name" />
+            {errors.fullName ? <p id="fullName-error" className="mt-2 text-xs text-destructive">{errors.fullName}</p> : null}
           </div>
 
           <div className="grid gap-5 sm:grid-cols-2">
@@ -179,12 +192,13 @@ export function JobApplicationDialog({
               <input
                 id="mobileNumber"
                 name="mobileNumber"
+                {...errorProps("mobileNumber", errors.mobileNumber)}
                 type="tel"
                 inputMode="tel"
-                className={field}
+                className={field + invalidClass(errors.mobileNumber)}
                 placeholder="10-digit mobile number"
               />
-              {errors.mobileNumber ? <p className="mt-2 text-xs text-destructive">{errors.mobileNumber}</p> : null}
+              {errors.mobileNumber ? <p id="mobileNumber-error" className="mt-2 text-xs text-destructive">{errors.mobileNumber}</p> : null}
             </div>
 
             <div>
@@ -194,11 +208,12 @@ export function JobApplicationDialog({
               <input
                 id="emailAddress"
                 name="emailAddress"
+                {...errorProps("emailAddress", errors.emailAddress)}
                 type="email"
-                className={field}
+                className={field + invalidClass(errors.emailAddress)}
                 placeholder="john@example.com"
               />
-              {errors.emailAddress ? <p className="mt-2 text-xs text-destructive">{errors.emailAddress}</p> : null}
+              {errors.emailAddress ? <p id="emailAddress-error" className="mt-2 text-xs text-destructive">{errors.emailAddress}</p> : null}
             </div>
           </div>
 
@@ -206,8 +221,8 @@ export function JobApplicationDialog({
             <label htmlFor="location" className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
               Current Location / City*
             </label>
-            <input id="location" name="location" className={field} placeholder="e.g. Kozhikode, Keralam" />
-            {errors.location ? <p className="mt-2 text-xs text-destructive">{errors.location}</p> : null}
+            <input id="location" name="location" {...errorProps("location", errors.location)} className={field + invalidClass(errors.location)} placeholder="e.g. Kozhikode, Keralam" />
+            {errors.location ? <p id="location-error" className="mt-2 text-xs text-destructive">{errors.location}</p> : null}
           </div>
 
           <div>
@@ -235,9 +250,23 @@ export function JobApplicationDialog({
                 }}
                 onDragLeave={() => setDragging(false)}
                 onDrop={onDrop}
+                id="cv"
+                role="button"
+                tabIndex={0}
+                {...errorProps("cv", errors.cv)}
                 onClick={() => inputRef.current?.click()}
-                className={`mt-2 cursor-pointer rounded-2xl border border-dashed px-6 py-9 text-center transition-all duration-300 ${
-                  dragging ? "border-accent bg-accent/5 scale-[1.02]" : "border-border hover:border-accent/50 hover:bg-white/5"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    inputRef.current?.click();
+                  }
+                }}
+                className={`mt-2 cursor-pointer rounded-2xl border border-dashed px-6 py-9 text-center transition-all duration-300 outline-none focus-visible:border-accent ${
+                  dragging
+                    ? "border-accent bg-accent/5 scale-[1.02]"
+                    : errors.cv
+                      ? "border-destructive"
+                      : "border-border hover:border-accent/50 hover:bg-white/5"
                 }`}
               >
                 <p className="text-sm font-semibold text-foreground">Drag &amp; drop your CV here</p>
@@ -251,7 +280,18 @@ export function JobApplicationDialog({
               className="hidden"
               onChange={(e) => acceptFile(e.target.files?.[0])}
             />
-            {errors.cv ? <p className="mt-2 text-xs text-destructive">{errors.cv}</p> : null}
+            {errors.cv ? <p id="cv-error" className="mt-2 text-xs text-destructive">{errors.cv}</p> : null}
+          </div>
+
+          <div>
+            <Turnstile
+              ref={turnstileRef}
+              onToken={(token) => {
+                setCaptchaToken(token);
+                if (token) setErrors((e) => ({ ...e, captcha: undefined }));
+              }}
+            />
+            {errors.captcha ? <p id="captcha" tabIndex={-1} className="mt-2 text-xs text-destructive">{errors.captcha}</p> : null}
           </div>
 
           {submitting || progress > 0 ? <Progress value={progress} className="h-2 mt-4" /> : null}

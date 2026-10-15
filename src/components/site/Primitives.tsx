@@ -77,13 +77,20 @@ export function ActionAnchor({
   href,
   children,
   variant = "ghost",
+  external = false,
 }: {
   href: string;
   children: ReactNode;
   variant?: keyof typeof variants;
+  /** Open in a new tab (links to other sites). */
+  external?: boolean;
 }) {
   return (
-    <a href={href} className={`${base} ${variants[variant]}`}>
+    <a
+      href={href}
+      className={`${base} ${variants[variant]}`}
+      {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+    >
       {children}
     </a>
   );

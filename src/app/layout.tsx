@@ -1,25 +1,32 @@
 
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { Toaster } from "@/components/ui/sonner";
 import { QueryProvider } from "@/components/providers/query-provider";
+import { SITE_URL } from "@/lib/site-url";
 
-import { img } from "@/lib/site-data";
 
+// Pages set their own title and description; the template adds the club name.
 export const metadata: Metadata = {
-  title: "Malabar Challengers Football Club",
-  description: "Malabar Sports & Recreation Foundation",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "Malabar Challengers Football Club",
+    template: "%s | Malabar Challengers FC",
+  },
+  description:
+    "Malabar Challengers FC, run by the Malabar Sports & Recreation Foundation, develops professional footballers in Keralam.",
   authors: [{ name: "Malabar Sports & Recreation Foundation" }],
   openGraph: {
     siteName: "Malabar Challengers Football Club",
     type: "website",
+    locale: "en_IN",
   },
+};
+
+export const viewport: Viewport = {
   themeColor: "#000000",
-  icons: {
-    icon: img.logo,
-  },
 };
 
 const themeScript = `(function(){try{var s=localStorage.getItem("mcfc-theme");if(s!=="light"){document.documentElement.classList.add("dark")}}catch(e){document.documentElement.classList.add("dark")}})();`;

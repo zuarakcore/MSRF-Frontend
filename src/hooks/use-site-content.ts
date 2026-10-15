@@ -1,23 +1,27 @@
 import { keepPreviousData, useInfiniteQuery, useQuery } from "@tanstack/react-query";
-import { api } from "@/lib/api";
+import { api, type Job, type Programme, type TeamMember } from "@/lib/api";
 
 // Public content changes rarely; avoid refetching on every mount and focus.
 const STALE_TIME = 5 * 60 * 1000;
 
+// `initialData` is the copy the server rendered into the page (src/lib/api-server.ts), when it had one.
+
 export const GALLERY_PAGE_SIZE = 24;
 
-export function useProgrammes() {
+export function useProgrammes(initialData?: Programme[] | undefined) {
   return useQuery({
     queryKey: ["public", "programmes"],
     queryFn: api.programmes,
+    initialData,
     staleTime: STALE_TIME,
   });
 }
 
-export function useTeamMembers() {
+export function useTeamMembers(initialData?: TeamMember[] | undefined) {
   return useQuery({
     queryKey: ["public", "team-members"],
     queryFn: api.teamMembers,
+    initialData,
     staleTime: STALE_TIME,
   });
 }
@@ -43,6 +47,6 @@ export function useGalleryItems(category?: string) {
   });
 }
 
-export function useJobs() {
-  return useQuery({ queryKey: ["public", "jobs"], queryFn: api.jobs, staleTime: STALE_TIME });
+export function useJobs(initialData?: Job[] | undefined) {
+  return useQuery({ queryKey: ["public", "jobs"], queryFn: api.jobs, initialData, staleTime: STALE_TIME });
 }

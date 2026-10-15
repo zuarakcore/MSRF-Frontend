@@ -6,6 +6,13 @@ import { BallIcon } from "./Primitives";
 import { Reveal } from "./Reveal";
 import { Instagram, Twitter, Facebook, Youtube, Phone, Mail } from "lucide-react";
 
+const socialLinks = [
+  { href: club.social.instagram, label: "Instagram", Icon: Instagram },
+  { href: club.social.facebook, label: "Facebook", Icon: Facebook },
+  { href: club.social.youtube, label: "YouTube", Icon: Youtube },
+  { href: club.social.x, label: "X (Twitter)", Icon: Twitter },
+].filter((link) => link.href);
+
 const columns = [
   {
     title: "Club",
@@ -66,20 +73,22 @@ export function SiteFooter() {
                   </a>
                 </div>
               </div>
-              <div className="flex gap-4 mt-8">
-                <a href="#" aria-label="Instagram" className="text-white/40 hover:text-accent transition-colors">
-                  <Instagram size={20} />
-                </a>
-                <a href="#" aria-label="Twitter" className="text-white/40 hover:text-accent transition-colors">
-                  <Twitter size={20} />
-                </a>
-                <a href="#" aria-label="Facebook" className="text-white/40 hover:text-accent transition-colors">
-                  <Facebook size={20} />
-                </a>
-                <a href="#" aria-label="Youtube" className="text-white/40 hover:text-accent transition-colors">
-                  <Youtube size={20} />
-                </a>
-              </div>
+              {socialLinks.length > 0 ? (
+                <div className="flex gap-4 mt-8">
+                  {socialLinks.map(({ href, label, Icon }) => (
+                    <a
+                      key={label}
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={label}
+                      className="text-white/40 hover:text-accent transition-colors"
+                    >
+                      <Icon size={20} />
+                    </a>
+                  ))}
+                </div>
+              ) : null}
             </Reveal>
           </div>
 
@@ -109,9 +118,9 @@ export function SiteFooter() {
         {/* Massive Typography */}
         <Reveal delay={200}>
           <div className="w-full border-t border-white/10 pt-16 pb-8 flex flex-col items-center overflow-hidden">
-            <h1 className="font-[family-name:var(--font-display)] text-[11vw] sm:text-[12vw] leading-[0.8] font-black text-white/5 uppercase tracking-tighter w-full text-center select-none hover:text-white/10 transition-colors duration-700">
+            <p aria-hidden className="font-[family-name:var(--font-display)] text-[11vw] sm:text-[12vw] leading-[0.8] font-black text-white/5 uppercase tracking-tighter w-full text-center select-none hover:text-white/10 transition-colors duration-700">
               CHALLENGERS
-            </h1>
+            </p>
           </div>
         </Reveal>
 

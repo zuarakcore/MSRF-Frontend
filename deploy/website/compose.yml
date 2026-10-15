@@ -3,7 +3,8 @@
 #   IMAGE_TAG=<git sha> docker compose up -d      (deploy.sh does this; do not run by hand without a tag)
 #
 # Joins the shared `edge` network only; Caddy (/srv/msrf/proxy) reaches it as msrf-website:3000.
-# Pages fetch the API from the browser, so the container needs no access to the backend.
+# Pages also read /public/* content server-side from https://api.malabarchallengersfc.com (outbound HTTPS;
+# results are cached for 60 s in the /app/.next/cache tmpfs).
 name: msrf-website
 
 services:

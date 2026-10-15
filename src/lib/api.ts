@@ -69,6 +69,8 @@ export type EnquiryInput = {
   email?: string | null;
   programmeId?: string | null;
   message: string;
+  /** Cloudflare Turnstile token; required once the backend sets TURNSTILE_SECRET_KEY. */
+  captchaToken?: string | null;
 };
 
 export type PaymentSubmissionCreated = {
@@ -85,10 +87,19 @@ export class ApiError extends Error {
     readonly status: number,
     readonly code: string,
     readonly fieldErrors: { field: string; message: string }[] = [],
+    /** Seconds to wait before retrying, from the Retry-After header of a 429. */
+    readonly retryAfter: number | null = null,
   ) {
     super(message);
     this.name = "ApiError";
   }
+}
+
+/** "45 seconds", "12 minutes", "1 hour" — for rate-limit messages. */
+function formatWait(seconds: number): string {
+  const [n, unit] =
+    seconds < 90 ? [seconds, "second"] : seconds < 5400 ? [Math.ceil(seconds / 60), "minute"] : [Math.ceil(seconds / 3600), "hour"];
+  return `${n} ${unit}${n === 1 ? "" : "s"}`;
 }
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
@@ -108,13 +119,14 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const body = await response.json().catch(() => null);
   if (!response.ok) {
     const fieldErrors = Array.isArray(body?.errors) ? body.errors : [];
+    const retryAfter = Number(response.headers.get("Retry-After")) || null;
     const message =
       response.status === 429
-        ? "Too many attempts. Please try again later."
+        ? `${body?.detail ?? "Too many attempts."}${retryAfter ? ` Please try again in ${formatWait(retryAfter)}.` : ""}`
         : body?.code === "VALIDATION_ERROR" && fieldErrors[0]?.message
           ? String(fieldErrors[0].message).replace(/^Value error, /, "")
           : (body?.detail ?? "Something went wrong. Please try again.");
-    throw new ApiError(message, response.status, body?.code ?? "HTTP_ERROR", fieldErrors);
+    throw new ApiError(message, response.status, body?.code ?? "HTTP_ERROR", fieldErrors, retryAfter);
   }
   return body as T;
 }
