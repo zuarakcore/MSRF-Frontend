@@ -293,7 +293,8 @@ function Home({ programmes: initialProgrammes, team: initialTeam }: { programmes
                     src={item.image}
                     alt={item.title}
                     loading="lazy"
-                    className="h-full w-full object-cover transition-transform duration-[1200ms] group-hover:scale-110"
+                    // The photos are pre-cut circles on white; a slight zoom keeps the white corners out of view.
+                    className="h-full w-full scale-[1.08] object-cover transition-transform duration-[1200ms] group-hover:scale-[1.16]"
                   />
                 </div>
                 <p className="mt-8 font-[family-name:var(--font-display)] text-sm font-bold tracking-[0.2em] text-accent">

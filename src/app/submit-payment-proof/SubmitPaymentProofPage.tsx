@@ -9,6 +9,7 @@ import { PageHero } from "@/components/site/PageHero";
 import { img } from "@/lib/site-data";
 import { CAPTCHA_PENDING_MESSAGE, TURNSTILE_ENABLED, Turnstile, type TurnstileHandle } from "@/components/site/Turnstile";
 import { errorProps, focusFirstError, invalidClass } from "@/lib/form-errors";
+import { DatePickerField } from "@/components/site/DatePickerField";
 
 const MAX_BYTES = 5 * 1024 * 1024;
 const ACCEPTED = ["image/jpeg", "image/jpg", "image/png"];
@@ -54,6 +55,7 @@ export default function SubmitPaymentProofPage() {
   const [progress, setProgress] = useState(0);
   const [dragging, setDragging] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<"UPI" | "Cash">("UPI");
+  const [paymentDate, setPaymentDate] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const turnstileRef = useRef<TurnstileHandle>(null);
@@ -86,6 +88,7 @@ export default function SubmitPaymentProofPage() {
     setErrors({});
     setProgress(0);
     setPaymentMethod("UPI");
+    setPaymentDate("");
     formRef.current?.reset();
   };
 
@@ -314,12 +317,18 @@ export default function SubmitPaymentProofPage() {
                 <label htmlFor="paymentDate" className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                   Payment date*
                 </label>
-                <input
+                <DatePickerField
                   id="paymentDate"
                   name="paymentDate"
-                  {...errorProps("paymentDate", errors.paymentDate)}
-                  type="date"
-                  max={new Date().toISOString().slice(0, 10)}
+                  value={paymentDate}
+                  onChange={(value) => {
+                    setPaymentDate(value);
+                    if (errors.paymentDate) setErrors((prev) => ({ ...prev, paymentDate: undefined }));
+                  }}
+                  maxDate={new Date()}
+                  placeholder="Select payment date"
+                  invalid={Boolean(errors.paymentDate)}
+                  describedBy={errors.paymentDate ? "paymentDate-error" : undefined}
                   className={field + invalidClass(errors.paymentDate)}
                 />
                 {errors.paymentDate ? <p id="paymentDate-error" className="mt-2 text-xs text-destructive">{errors.paymentDate}</p> : null}

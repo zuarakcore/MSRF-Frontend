@@ -1,9 +1,10 @@
 import logo from "@/assets/logo.jpg.asset.json";
 import argentinosCrest from "@/assets/arg.png";
 import heroStadium from "@/assets/hero-stadium.jpg";
-import journey1 from "@/assets/journey-1.jpg.asset.json";
-import journey2 from "@/assets/journey-2.jpg.asset.json";
-import journey3 from "@/assets/journey-3.jpg.asset.json";
+// Home "Three steps" images, in step order: dream -> training -> India jersey.
+import journeyDream from "@/assets/journey-dream.jpg";
+import journeyTraining from "@/assets/journey-training.jpg";
+import journeyIndia from "@/assets/journey-india.jpg";
 import train1 from "@/assets/train-1.jpg.asset.json";
 import train2 from "@/assets/train-2.jpg.asset.json";
 import train3 from "@/assets/train-3.jpg.asset.json";
@@ -20,8 +21,13 @@ export const img = {
   logo: url(logo),
   argentinosCrest: argentinosCrest.src,
   hero: heroStadium.src,
-  journey: [url(journey1), url(journey2), url(journey3)] as [string, string, string],
-  training: [url(train1), url(train2), url(train3), url(train4)] as [string, string, string, string],
+  journey: [journeyDream.src, journeyTraining.src, journeyIndia.src] as [string, string, string],
+  training: [url(train1), url(train2), url(train3), url(train4)] as [
+    string,
+    string,
+    string,
+    string,
+  ],
   ajVisit: ajVisit.src,
   contactBanner: contactBanner.src,
   squad: [url(squad1), url(squad2), url(squadWide)] as [string, string, string],

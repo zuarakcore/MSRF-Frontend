@@ -37,6 +37,8 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
   --color-surface: var(--surface);
   --color-on-dark: oklch(0.985 0 0);
 
@@ -67,6 +69,9 @@
   --border: oklch(0.915 0.004 250);
   --input: oklch(0.915 0.004 250);
   --ring: oklch(0.63 0.19 148);
+  /* Form errors and destructive actions (text-destructive, border-destructive...). */
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.985 0 0);
 
   --glass-bg: oklch(1 0 0 / 62%);
   --glass-border: oklch(0.145 0 0 / 8%);
@@ -94,6 +99,8 @@
   --border: oklch(1 0 0 / 12%);
   --input: oklch(1 0 0 / 16%);
   --ring: oklch(0.72 0.2 148);
+  --destructive: oklch(0.704 0.191 22.216);
+  --destructive-foreground: oklch(0.985 0 0);
 
   --glass-bg: oklch(1 0 0 / 5%);
   --glass-border: oklch(1 0 0 / 12%);

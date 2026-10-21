@@ -59,20 +59,23 @@ export function SiteHeader() {
           </Link>
 
           <nav className="hidden items-center gap-7 lg:flex">
-            {nav.map((item) => {
-              const isActive = item.to === "/" ? pathname === "/" : pathname?.startsWith(item.to);
-              return (
-                <Link
-                  key={item.to}
-                  href={item.to}
-                  className={`accent-underline text-[0.82rem] font-medium transition-colors hover:text-foreground ${
-                    isActive ? "text-accent" : "text-muted-foreground"
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              );
-            })}
+            {/* Desktop shows the "Contact Us" button instead of a Contact link; the mobile menu keeps it. */}
+            {nav
+              .filter((item) => item.to !== "/contact")
+              .map((item) => {
+                const isActive = item.to === "/" ? pathname === "/" : pathname?.startsWith(item.to);
+                return (
+                  <Link
+                    key={item.to}
+                    href={item.to}
+                    className={`accent-underline text-[0.82rem] font-medium transition-colors hover:text-foreground ${
+                      isActive ? "text-accent" : "text-muted-foreground"
+                    }`}
+                  >
+                    {item.label}
+                  </Link>
+                );
+              })}
           </nav>
 
           <div className="flex items-center gap-2">
@@ -92,7 +95,13 @@ export function SiteHeader() {
               onClick={() => setOpen((v) => !v)}
               className="glass flex h-9 w-9 items-center justify-center rounded-full lg:hidden"
             >
-              <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg
+                viewBox="0 0 24 24"
+                className="h-4 w-4"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
                 {open ? <path d="M6 6l12 12M18 6L6 18" /> : <path d="M4 8h16M4 16h16" />}
               </svg>
             </button>
