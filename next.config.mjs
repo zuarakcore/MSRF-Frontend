@@ -1,8 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  // Production runs `node server.js` from .next/standalone inside Docker (see Dockerfile).
-  output: 'standalone',
+  // The VPS runs `node server.js` from .next/standalone inside Docker (see Dockerfile).
+  // Not on Vercel: Next 16.3.0-16.3.4 skip writing .next/next-server.js.nft.json when standalone is
+  // combined with Vercel's build adapter, and the build fails (vercel/next.js#96646).
+  ...(process.env.VERCEL ? {} : { output: 'standalone' }),
   poweredByHeader: false,
   async rewrites() {
     return [
