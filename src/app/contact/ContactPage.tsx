@@ -2,6 +2,7 @@
 
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
+import { ChevronDown } from "lucide-react";
 import { toast } from "sonner";
 import { Reveal } from "@/components/site/Reveal";
 import { Section, SectionHead } from "@/components/site/Primitives";
@@ -132,19 +133,25 @@ function Contact({ programmes: initialProgrammes }: { programmes?: Programme[] |
                 </label>
                 <label className="text-sm sm:col-span-2">
                   <span className="text-muted-foreground">Programme of interest</span>
-                  <select
-                    name="programmeId"
-                    value={programmeId}
-                    onChange={(event) => setProgrammeId(event.target.value)}
-                    className="mt-2 w-full rounded-2xl border border-input bg-background px-4 py-3 text-sm outline-none transition-colors focus:border-accent"
-                  >
-                    <option value="">{programmesLoading ? "Loading programmes…" : "Not sure yet"}</option>
-                    {programs?.map((program) => (
-                      <option key={program.id} value={program.id}>
-                        {program.title} · {program.ageGroup}
-                      </option>
-                    ))}
-                  </select>
+                  <div className="relative mt-2">
+                    <select
+                      name="programmeId"
+                      value={programmeId}
+                      onChange={(event) => setProgrammeId(event.target.value)}
+                      className="w-full appearance-none rounded-2xl border border-input bg-background py-3 pl-4 pr-11 text-sm outline-none transition-colors focus:border-accent"
+                    >
+                      <option value="">{programmesLoading ? "Loading programmes…" : "Not sure yet"}</option>
+                      {programs?.map((program) => (
+                        <option key={program.id} value={program.id}>
+                          {program.title} · {program.ageGroup}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown
+                      aria-hidden
+                      className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+                    />
+                  </div>
                 </label>
                 <label className="text-sm sm:col-span-2">
                   <span className="text-muted-foreground">Message</span>
