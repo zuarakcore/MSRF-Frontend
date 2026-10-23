@@ -72,8 +72,9 @@ function Contact({ programmes: initialProgrammes }: { programmes?: Programme[] |
           </>
         }
         body="Tell us about your child's age and experience, and our academy team will get back with the next available batch."
-        image={img.contactBanner}
-        alt="Youth football academy training session at golden hour"
+        image={img.aj.teamStandWide}
+        alt="Academy players in kit with their coaches on the pitch"
+        imagePosition="top"
       />
 
       <Section>
