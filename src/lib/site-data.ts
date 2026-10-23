@@ -1,10 +1,10 @@
 import logo from "@/assets/logo.jpg.asset.json";
 import argentinosCrest from "@/assets/arg.png";
 import heroStadium from "@/assets/hero-stadium.jpg";
-// Home "Three steps" images, in step order: dream -> training -> India jersey.
-import journeyDream from "@/assets/journey-dream.jpg";
-import journeyTraining from "@/assets/journey-training.jpg";
-import journeyIndia from "@/assets/journey-india.jpg";
+// Home "Three steps" images, in step order: dream -> training -> jersey (square crops of the AJ visit photos).
+import journeyDream from "@/assets/aj/journey-dream.webp";
+import journeyTraining from "@/assets/aj/journey-training.webp";
+import journeyIndia from "@/assets/aj/journey-jersey.webp";
 import train1 from "@/assets/train-1.jpg.asset.json";
 import train2 from "@/assets/train-2.jpg.asset.json";
 import train3 from "@/assets/train-3.jpg.asset.json";
@@ -99,7 +99,7 @@ export const visionPillars = [
   {
     title: "Benchmarks",
     body: "Establish exceptional standards for other clubs and join the National League as a professional team within five years.",
-    image: img.aj.jerseyHandover,
+    image: img.aj.delegationWelcome,
   },
   {
     title: "Enrich",
