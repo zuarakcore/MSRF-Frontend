@@ -11,7 +11,15 @@ const nextConfig = {
       {
         source: '/__l5e/:path*',
         destination: 'https://id-preview--f24204c3-2c7a-4f74-b654-ff5be08cfd9d.lovable.app/__l5e/:path*'
-      }
+      },
+      // `next dev` only: the browser calls /api/v1 on localhost and this forwards it to the real API
+      // (production CORS doesn't allow localhost). See REQUEST_BASE_URL in src/lib/api.ts.
+      ...(process.env.NODE_ENV === 'development'
+        ? [{
+            source: '/api/v1/:path*',
+            destination: `${(process.env.NEXT_PUBLIC_API_BASE_URL ?? 'https://api.malabarchallengersfc.com/api/v1').replace(/\/+$/, '')}/:path*`
+          }]
+        : [])
     ]
   }
 };

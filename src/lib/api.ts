@@ -4,8 +4,13 @@
  */
 
 export const API_BASE_URL = (
-  process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000/api/v1"
+  process.env.NEXT_PUBLIC_API_BASE_URL ?? "https://api.malabarchallengersfc.com/api/v1"
 ).replace(/\/+$/, "");
+
+// Production CORS only allows the live site, so under `next dev` the browser calls the same-origin
+// proxy in next.config.mjs instead. Server-side fetches don't need CORS and use the API directly.
+const REQUEST_BASE_URL =
+  process.env.NODE_ENV === "development" && typeof window !== "undefined" ? "/api/v1" : API_BASE_URL;
 
 export type Programme = {
   id: string;
@@ -105,7 +110,7 @@ function formatWait(seconds: number): string {
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   let response: Response;
   try {
-    response = await fetch(`${API_BASE_URL}${path}`, {
+    response = await fetch(`${REQUEST_BASE_URL}${path}`, {
       ...init,
       headers: { Accept: "application/json", ...init?.headers },
     });
