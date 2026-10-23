@@ -5,6 +5,7 @@ import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { Reveal } from "@/components/site/Reveal";
 import { ContentStatus, Section } from "@/components/site/Primitives";
+import { img } from "@/lib/site-data";
 import { PageHero } from "@/components/site/PageHero";
 import { useGalleryCategories, useGalleryItems } from "@/hooks/use-site-content";
 import type { GalleryItem } from "@/lib/api";
@@ -38,8 +39,9 @@ function Gallery() {
           </>
         }
         body="Training sessions, match days, academy events and moments from our Argentine partnership."
-        image="/gallery_banner_bg.webp"
-        alt="Academy players celebrating on the pitch at sunset, with photo prints and a camera"
+        image={img.aj.maradonaBookCheer}
+        alt="Players, coaches and supporters celebrating the Argentinos Juniors visit"
+        imagePosition="top"
       />
 
       <Section>
@@ -94,10 +96,7 @@ function Gallery() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
                 <figcaption className="absolute bottom-0 left-0 right-0 translate-y-3 p-6 opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
-                  <p className="text-[0.65rem] uppercase tracking-[0.22em] text-accent">
-                    {item.category}
-                  </p>
-                  <p className="mt-2 text-sm font-medium text-on-dark">
+                  <p className="text-sm font-medium text-on-dark">
                     {item.caption ?? item.title}
                   </p>
                 </figcaption>

@@ -23,8 +23,9 @@ function Programs({ programmes: initialProgrammes }: { programmes?: Programme[] 
           </>
         }
         body="From a first controlled touch at six to a professional trial at eighteen — structured blocks, accredited coaches and measurable progress at every stage."
-        image="/programs_banner.webp"
-        alt="Academy training session in progress"
+        image={img.aj.rainCelebrationWide}
+        alt="Academy players celebrating together on the pitch"
+        imagePosition="top"
       />
 
       <Section>

@@ -1,5 +1,6 @@
 "use client";
 
+import { img } from "@/lib/site-data";
 import { PageHero } from "@/components/site/PageHero";
 import { ContentStatus, Section, SectionHead } from "@/components/site/Primitives";
 import { Reveal } from "@/components/site/Reveal";
@@ -28,8 +29,9 @@ export default function CareerPage({ jobs: initialJobs }: { jobs?: Job[] | undef
           </>
         }
         body="We are always looking for passionate, driven professionals to help us build a world-class football academy and shape the future of Indian football."
-        image="/career_banner_bg.webp"
-        alt="Coach shaking hands with player"
+        image={img.aj.jerseyHandover}
+        alt="Argentinos Juniors jersey presented at the MSRF welcome event"
+        imagePosition="top"
       />
 
       <Section className="bg-surface">

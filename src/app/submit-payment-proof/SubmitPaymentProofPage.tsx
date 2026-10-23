@@ -178,8 +178,9 @@ export default function SubmitPaymentProofPage() {
           </>
         }
         body="Share your payment details and proof. Our academy team will verify and update your status."
-        image={img.ajVisit}
-        alt="Malabar Challengers coaches welcoming academy players"
+        image={img.aj.delegationWelcome}
+        alt="MSRF leadership welcoming the Argentinos Juniors delegation"
+        imagePosition="top"
       />
 
       <section className="px-6 py-24 md:px-10">
