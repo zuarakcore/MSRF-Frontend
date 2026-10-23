@@ -149,18 +149,19 @@ function About({ team: initialTeam }: { team?: TeamMember[] | undefined }) {
         ) : null}
         <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {team?.map((member, index) => (
-            <Reveal key={member.id} delay={(index % 3) * 90}>
-              <article className="lift group h-full overflow-hidden rounded-3xl border border-border bg-card">
-                <div className="h-48 w-full overflow-hidden flex items-center justify-center bg-muted transition-transform duration-700 group-hover:scale-105">
+            <Reveal key={member.id} delay={(index % 3) * 90} className="h-full">
+              <article className="lift group flex h-full flex-col overflow-hidden rounded-3xl border border-border bg-card">
+                {/* Portrait-shaped frame so head-and-shoulders photos show in full */}
+                <div className="aspect-4/5 w-full shrink-0 overflow-hidden flex items-center justify-center bg-muted">
                   {member.photoUrl ? (
-                    <img src={member.photoUrl} alt={member.name} loading="lazy" className="h-full w-full object-cover" />
+                    <img src={member.photoUrl} alt={member.name} loading="lazy" className="h-full w-full object-cover object-top transition-transform duration-700 group-hover:scale-105" />
                   ) : (
                     <span className="text-8xl font-bold text-muted-foreground/30 uppercase">
                       {member.name.charAt(0)}
                     </span>
                   )}
                 </div>
-                <div className="p-7">
+                <div className="flex-1 p-7">
                   <p className="eyebrow">{member.designation}</p>
                   <h2 className="mt-3 text-lg">{member.name}</h2>
                   {member.biography ? (

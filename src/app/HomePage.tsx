@@ -415,9 +415,10 @@ function Home({ programmes: initialProgrammes, team: initialTeam }: { programmes
             loop={team.data.length > 4}
           >
             {team.data.map((member) => (
-              <SwiperSlide key={member.id}>
-                <article className="lift group overflow-hidden rounded-3xl border border-border bg-card">
-                  <div className="aspect-[3/4] overflow-hidden flex items-center justify-center bg-muted">
+              // h-auto lets Swiper's flex row stretch every slide to the tallest card.
+              <SwiperSlide key={member.id} className="h-auto!">
+                <article className="lift group flex h-full flex-col overflow-hidden rounded-3xl border border-border bg-card">
+                  <div className="aspect-[3/4] shrink-0 overflow-hidden flex items-center justify-center bg-muted">
                     {member.photoUrl ? (
                       <img src={member.photoUrl} alt={member.name} loading="lazy" className="h-full w-full object-cover" />
                     ) : (
@@ -426,7 +427,7 @@ function Home({ programmes: initialProgrammes, team: initialTeam }: { programmes
                       </span>
                     )}
                   </div>
-                  <div className="p-6">
+                  <div className="flex-1 p-6">
                     <p className="eyebrow">{member.designation}</p>
                     <h3 className="mt-3 text-base">{member.name}</h3>
                   </div>

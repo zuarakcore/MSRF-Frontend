@@ -124,21 +124,22 @@ export function SiteFooter() {
           </div>
         </Reveal>
 
-        {/* Bottom Bar */}
-        <Reveal delay={300}>
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] sm:text-xs font-semibold text-white/40 uppercase tracking-[0.2em] mt-4">
-            <p className="text-center md:text-left">
-              © {new Date().getFullYear()} {club.foundation}
-            </p>
-            <div className="flex items-center gap-3">
-              <BallIcon className="w-4 h-4 text-accent animate-[roll_6s_linear_infinite]" />
-              <span className="text-white/30">Crafted by Zuarak</span>
-            </div>
-            <a href="#top" className="hover:text-accent transition-colors text-center md:text-right">
-              Back to top ↑
-            </a>
+        {/* Bottom Bar: not wrapped in Reveal. At the very end of the page it never reaches
+            Reveal's in-view band (the bottom 10% is excluded), so it would stay invisible. */}
+        <div className="flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] sm:text-xs font-semibold text-white/40 uppercase tracking-[0.2em] mt-4">
+          <p className="text-center md:text-left">
+            © {new Date().getFullYear()} Malabar Challengers. All rights reserved.
+          </p>
+          <div className="flex items-center gap-3">
+            <BallIcon className="w-4 h-4 text-accent animate-[roll_6s_linear_infinite]" />
+            <span className="text-white/60">
+              Crafted by <span className="text-accent">Zuarak</span>
+            </span>
           </div>
-        </Reveal>
+          <a href="#top" className="hover:text-accent transition-colors text-center md:text-right">
+            Back to top ↑
+          </a>
+        </div>
       </div>
     </footer>
   );
