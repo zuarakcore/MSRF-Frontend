@@ -44,8 +44,9 @@ function Partner() {
           </>
         }
         body={partnership.body}
-        image={img.ajVisit}
-        alt="Argentinos Juniors delegation visiting the academy"
+        image={img.aj.delegationSeated}
+        alt="Argentinos Juniors delegation with MSRF leadership in Kozhikode"
+        imagePosition="top"
       />
 
       <Section>
@@ -169,17 +170,17 @@ function Partner() {
             {
               title: "Accredited coaches",
               body: "Our staff train under AJ-designed, internationally accredited programmes and are re-assessed each season.",
-              image: img.training[0],
+              image: img.aj.delegationWelcome,
             },
             {
               title: "Shared methodology",
               body: "Session plans, drills and player evaluation forms follow the AJ model, adapted to Indian conditions.",
-              image: img.training[1],
+              image: img.aj.rainCelebrationWide,
             },
             {
               title: "Exposure trips",
               body: "Exchange visits, camps and friendly fixtures give selected players time in a professional environment.",
-              image: img.squad[0],
+              image: img.aj.maradonaBook,
             },
           ].map((item, index) => (
             <Reveal key={item.title} delay={index * 100}>

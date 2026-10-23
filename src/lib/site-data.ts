@@ -14,6 +14,17 @@ import contactBanner from "@/assets/contact-banner.webp";
 import squad1 from "@/assets/squad-1.jpg.asset.json";
 import squad2 from "@/assets/squad-2.jpg.asset.json";
 import squadWide from "@/assets/squad-wide.jpg.asset.json";
+// Argentinos Juniors delegation visit to Kozhikode.
+import ajDelegationWelcome from "@/assets/aj/aj-delegation-welcome.webp";
+import ajDelegationSeated from "@/assets/aj/aj-delegation-seated.webp";
+import ajJerseyHandover from "@/assets/aj/aj-jersey-handover.webp";
+import ajPitchPresentation from "@/assets/aj/aj-pitch-presentation.webp";
+import ajRainCelebrationWide from "@/assets/aj/aj-rain-celebration-wide.webp";
+import ajRainCelebration from "@/assets/aj/aj-rain-celebration.webp";
+import ajMaradonaBook from "@/assets/aj/aj-maradona-book.webp";
+import ajMaradonaBookCheer from "@/assets/aj/aj-maradona-book-cheer.webp";
+import ajTeamStand from "@/assets/aj/aj-team-stand.webp";
+import ajTeamStandWide from "@/assets/aj/aj-team-stand-wide.webp";
 
 const url = (asset: unknown) => (asset as { url: string }).url;
 
@@ -31,6 +42,18 @@ export const img = {
   ajVisit: ajVisit.src,
   contactBanner: contactBanner.src,
   squad: [url(squad1), url(squad2), url(squadWide)] as [string, string, string],
+  aj: {
+    delegationWelcome: ajDelegationWelcome.src,
+    delegationSeated: ajDelegationSeated.src,
+    jerseyHandover: ajJerseyHandover.src,
+    pitchPresentation: ajPitchPresentation.src,
+    rainCelebrationWide: ajRainCelebrationWide.src,
+    rainCelebration: ajRainCelebration.src,
+    maradonaBook: ajMaradonaBook.src,
+    maradonaBookCheer: ajMaradonaBookCheer.src,
+    teamStand: ajTeamStand.src,
+    teamStandWide: ajTeamStandWide.src,
+  },
 };
 
 export const club = {
@@ -66,22 +89,22 @@ export const visionPillars = [
   {
     title: "Restore",
     body: "Restore Keralam's football prominence and elevate Indian football to international standards.",
-    image: img.training[0],
+    image: img.aj.rainCelebration,
   },
   {
     title: "Promote",
     body: "Promote a vibrant sports culture among youth and foster professionalism across the football industry.",
-    image: img.training[1],
+    image: img.aj.pitchPresentation,
   },
   {
     title: "Benchmarks",
     body: "Establish exceptional standards for other clubs and join the National League as a professional team within five years.",
-    image: img.training[2],
+    image: img.aj.jerseyHandover,
   },
   {
     title: "Enrich",
     body: "Enrich the overall Indian football ecosystem with a focus on professionalism and excellence.",
-    image: img.training[3],
+    image: img.aj.maradonaBookCheer,
   },
 ];
 

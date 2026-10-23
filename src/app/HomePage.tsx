@@ -222,12 +222,12 @@ function Home({ programmes: initialProgrammes, team: initialTeam }: { programmes
           <div className="group relative overflow-hidden rounded-[3rem] bg-card border border-border shadow-2xl">
             {/* Background Image with Overlay */}
             <img
-              src={img.ajVisit}
-              alt="Technical Partner delegation with academy players"
+              src={img.aj.teamStand}
+              alt="Argentinos Juniors delegation with academy players and coaches on the pitch"
               loading="lazy"
-              className="absolute inset-0 h-full w-full object-cover opacity-30 transition-transform duration-1000 group-hover:scale-105"
+              className="absolute inset-0 h-full w-full object-cover opacity-60 transition-transform duration-1000 group-hover:scale-105"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/80 to-black/20" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/75 to-black/30" />
 
             <div className="relative grid items-center gap-8 p-8 md:gap-12 md:p-12 lg:grid-cols-[1.5fr_1fr] lg:p-20">
               {/* Text Content */}

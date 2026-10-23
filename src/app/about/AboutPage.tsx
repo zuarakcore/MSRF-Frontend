@@ -23,8 +23,8 @@ function About({ team: initialTeam }: { team?: TeamMember[] | undefined }) {
           </>
         }
         body={`${club.foundation} is a not-for-profit company registered under Section 8 of the Companies Act, founded by a group of retired civil servants and their associates with a single aim — promoting football in Keralam and India.`}
-        image="/about_banner_bg.webp"
-        alt="Epic football stadium background"
+        image={img.aj.teamStand}
+        alt="Academy players and coaches with the Argentinos Juniors delegation on the pitch"
       />
 
       <Section className="pitch-grid">
