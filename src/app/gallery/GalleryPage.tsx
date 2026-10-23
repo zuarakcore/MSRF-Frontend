@@ -83,21 +83,24 @@ function Gallery() {
                 <button
                   type="button"
                   onClick={() => setPreviewIndex(index)}
-                  aria-label={`Open preview: ${item.caption ?? item.title}`}
+                  aria-label={`Open preview: ${item.title}`}
                   className="absolute inset-0 z-10 cursor-zoom-in rounded-3xl outline-none focus-visible:ring-2 focus-visible:ring-accent"
                 />
                 <img
                   src={item.imageUrl}
                   srcSet={srcSet(item)}
                   sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                  alt={item.caption ?? item.title}
+                  alt={item.title}
                   loading="lazy"
                   className="h-full w-full object-cover transition-transform duration-[1400ms] group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
                 <figcaption className="absolute bottom-0 left-0 right-0 translate-y-3 p-6 opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
-                  <p className="text-sm font-medium text-on-dark">
-                    {item.caption ?? item.title}
+                  <p className="text-[0.65rem] uppercase tracking-[0.22em] text-accent">
+                    {item.category}
+                  </p>
+                  <p className="mt-2 text-sm font-medium text-on-dark">
+                    {item.title}
                   </p>
                 </figcaption>
               </figure>
@@ -192,7 +195,7 @@ function GalleryPreview({
           {item ? (
             <>
               <DialogPrimitive.Title className="sr-only">
-                {item.caption ?? item.title}
+                {item.title}
               </DialogPrimitive.Title>
               <DialogPrimitive.Description className="sr-only">
                 Photo {(index ?? 0) + 1} of {items.length}. Use the arrow keys for the previous or
@@ -228,7 +231,7 @@ function GalleryPreview({
               <img
                 key={item.id}
                 src={item.imageUrl}
-                alt={item.caption ?? item.title}
+                alt={item.title}
                 className="max-h-[78vh] max-w-full rounded-2xl object-contain shadow-2xl"
               />
               <div className="mt-4 max-w-2xl text-center">
@@ -236,7 +239,7 @@ function GalleryPreview({
                   {item.category}
                 </p>
                 <p className="mt-1 text-sm font-medium text-on-dark">
-                  {item.caption ?? item.title}
+                  {item.title}
                 </p>
                 <p className="mt-1 text-xs text-white/60">
                   {(index ?? 0) + 1} / {items.length}
