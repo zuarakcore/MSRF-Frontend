@@ -19,12 +19,12 @@ function About({ team: initialTeam }: { team?: TeamMember[] | undefined }) {
         eyebrow="About us"
         title={
           <>
-            Football, run with the <span className="text-accent">discipline of public service</span>
+            Built by public servants, driven by a <span className="text-accent">love for football</span>
           </>
         }
         body={`${club.foundation} is a not-for-profit company registered under Section 8 of the Companies Act, founded by a group of retired civil servants and their associates with a single aim — promoting football in Keralam and India.`}
-        image={img.aj.teamStand}
-        alt="Academy players and coaches with the Argentinos Juniors delegation on the pitch"
+        image={img.aboutBanner}
+        alt="Academy players gathered around their coaches on the pitch at sunset"
       />
 
       <Section className="pitch-grid">
@@ -47,8 +47,8 @@ function About({ team: initialTeam }: { team?: TeamMember[] | undefined }) {
           <Reveal delay={140} className="h-full min-h-[400px]">
             <div className="h-full w-full overflow-hidden rounded-[2rem] border border-border shadow-2xl">
               <img
-                src="/about_training_bg.webp"
-                alt="Young players training at the academy"
+                src={img.aboutWho}
+                alt="Academy coaches talking to young players seated on the pitch"
                 loading="lazy"
                 className="h-full w-full object-cover transition-transform duration-1000 hover:scale-105"
               />
@@ -57,9 +57,39 @@ function About({ team: initialTeam }: { team?: TeamMember[] | undefined }) {
         </div>
       </Section>
 
+      <Section>
+        <div className="grid items-center gap-16 lg:grid-cols-[1fr_1fr]">
+          <Reveal className="order-last lg:order-first">
+            <div className="mx-auto aspect-square w-full max-w-[520px] overflow-hidden rounded-[2rem] border border-border shadow-2xl">
+              <img
+                src={img.journey[2]}
+                alt="The India No. 10 jersey held up on the pitch"
+                loading="lazy"
+                className="h-full w-full object-cover transition-transform duration-1000 hover:scale-105"
+              />
+            </div>
+          </Reveal>
+          <Reveal delay={140}>
+            <SectionHead
+              eyebrow="Our dream"
+              title="One of our own, one day in India blue"
+              body="Every child who steps onto our pitch carries a dream, and so do we. Ours is that one day a player who grew up in our academy pulls on the India jersey, first for the Under-15 or Under-20 team, and then beyond."
+            />
+            <p className="mt-6 text-sm leading-relaxed text-muted-foreground">
+              It is not a promise. It is what we work towards in every training session, every match and every early
+              morning on the pitch.
+            </p>
+          </Reveal>
+        </div>
+      </Section>
+
       <Section className="bg-surface">
         <Reveal>
-          <SectionHead eyebrow="Our mission" title="Four things we promise every family" align="center" />
+          <SectionHead
+            eyebrow="Our mission"
+            title="What we promise"
+            align="center"
+          />
         </Reveal>
         <div className="mt-16 grid gap-6 md:grid-cols-2">
           {missionPillars.map((pillar, index) => (
@@ -111,8 +141,8 @@ function About({ team: initialTeam }: { team?: TeamMember[] | undefined }) {
                   }`}
                 >
                   <span
-                    className={`absolute left-0 top-2 h-3.5 w-3.5 rounded-full border-2 border-accent bg-background md:left-auto ${
-                      index % 2 === 0 ? "md:-right-[7px]" : "md:-left-[7px]"
+                    className={`absolute left-0 top-[3px] h-3.5 w-3.5 rounded-full border-2 border-accent bg-background ${
+                      index % 2 === 0 ? "md:left-auto md:-right-[7px]" : "md:-left-[7px]"
                     }`}
                   />
                   <p className="font-[family-name:var(--font-display)] text-sm font-bold tracking-[0.2em] text-accent">
@@ -184,7 +214,7 @@ function About({ team: initialTeam }: { team?: TeamMember[] | undefined }) {
               <span className="mb-6 inline-block rounded-full bg-accent/10 px-5 py-2 text-[10px] sm:text-xs font-bold uppercase tracking-[0.25em] text-accent ring-1 ring-accent/30">
                 Join the club
               </span>
-              <h2 className="font-[family-name:var(--font-display)] text-5xl md:text-7xl font-black tracking-tight text-white leading-tight">
+              <h2 className="font-[family-name:var(--font-display)] text-5xl md:text-7xl font-black tracking-tight text-foreground leading-tight">
                 Be part of the <br />
                 <span className="text-accent">next generation</span>
               </h2>

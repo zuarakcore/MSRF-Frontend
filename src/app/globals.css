@@ -189,6 +189,28 @@
   }
 }
 
+/* Equaliser bars in the "Tap for sound" hint. */
+@keyframes eq {
+  0%,
+  100% {
+    transform: scaleY(0.35);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+/* "Tap for sound" hint nudging towards the speaker button. */
+@keyframes nudge {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+}
+
 @keyframes sweep {
   0%,
   100% {

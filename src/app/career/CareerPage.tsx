@@ -29,9 +29,9 @@ export default function CareerPage({ jobs: initialJobs }: { jobs?: Job[] | undef
           </>
         }
         body="We are always looking for passionate, driven professionals to help us build a world-class football academy and shape the future of Indian football."
-        image={img.aj.jerseyHandover}
-        alt="Argentinos Juniors jersey presented at the MSRF welcome event"
-        imagePosition="top"
+        image={img.careerBanner}
+        alt="Coaches leading a training session with academy players on a red-earth pitch lined with palm trees"
+        imagePosition="bottom"
       />
 
       <Section className="bg-surface">

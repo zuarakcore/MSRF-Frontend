@@ -39,9 +39,9 @@ function Gallery() {
           </>
         }
         body="Training sessions, match days, academy events and moments from our Argentine partnership."
-        image={img.aj.maradonaBookCheer}
-        alt="Players, coaches and supporters celebrating the Argentinos Juniors visit"
-        imagePosition="top"
+        image={img.galleryBanner}
+        alt="Young players in blue and yellow kits competing in a match on a grass pitch"
+        imagePosition="bottom"
       />
 
       <Section>

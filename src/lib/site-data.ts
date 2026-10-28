@@ -2,15 +2,25 @@ import logo from "@/assets/logo.jpg.asset.json";
 import argentinosCrest from "@/assets/arg.png";
 import heroStadium from "@/assets/hero-stadium.jpg";
 // Home "Three steps" images, in step order: dream -> training -> jersey (square crops of the AJ visit photos).
-import journeyDream from "@/assets/aj/journey-dream.webp";
-import journeyTraining from "@/assets/aj/journey-training.webp";
-import journeyIndia from "@/assets/aj/journey-jersey.webp";
+import journeyDream from "@/assets/aj/journey-dream-academy.webp";
+import journeyTraining from "@/assets/aj/journey-training-academy.webp";
+import journeyIndia from "@/assets/aj/journey-india-jersey.webp";
 import train1 from "@/assets/train-1.jpg.asset.json";
 import train2 from "@/assets/train-2.jpg.asset.json";
 import train3 from "@/assets/train-3.jpg.asset.json";
 import train4 from "@/assets/train-4.jpg.asset.json";
 import ajVisit from "@/assets/aj-visit.jpg";
 import contactBanner from "@/assets/contact-banner.webp";
+import aboutBanner from "@/assets/about-hero.webp";
+import aboutWho from "@/assets/about-who.webp";
+import programmesBanner from "@/assets/programmes-hero.webp";
+import partnerBanner from "@/assets/partner-hero.webp";
+import partnerCoaches from "@/assets/partner-coaches.webp";
+import partnerMethodology from "@/assets/partner-methodology.webp";
+import partnerExposure from "@/assets/partner-exposure.webp";
+import careerBanner from "@/assets/career-hero.webp";
+import galleryBanner from "@/assets/gallery-hero.webp";
+import contactHero from "@/assets/contact-hero.webp";
 import squad1 from "@/assets/squad-1.jpg.asset.json";
 import squad2 from "@/assets/squad-2.jpg.asset.json";
 import squadWide from "@/assets/squad-wide.jpg.asset.json";
@@ -41,6 +51,16 @@ export const img = {
   ],
   ajVisit: ajVisit.src,
   contactBanner: contactBanner.src,
+  aboutBanner: aboutBanner.src,
+  aboutWho: aboutWho.src,
+  programmesBanner: programmesBanner.src,
+  partnerBanner: partnerBanner.src,
+  partnerCoaches: partnerCoaches.src,
+  partnerMethodology: partnerMethodology.src,
+  partnerExposure: partnerExposure.src,
+  careerBanner: careerBanner.src,
+  galleryBanner: galleryBanner.src,
+  contactHero: contactHero.src,
   squad: [url(squad1), url(squad2), url(squadWide)] as [string, string, string],
   aj: {
     delegationWelcome: ajDelegationWelcome.src,
@@ -62,9 +82,9 @@ export const club = {
   abbr: "MCFC",
   foundation: "Malabar Sports & Recreation Foundation",
   tagline: "We create professional footballers",
-  kicker: "We are different",
+  kicker: "Every great player begins with a dream",
   malayalam: "നമ്മുടെ സ്വന്തം",
-  phone: "77 36 32 91 11",
+  phone: "+91 77 36 32 91 11",
   phoneHref: "+917736329111",
   email: "coo@msrf.co.in",
   website: "www.malabarchallengersfc.com",
@@ -97,8 +117,8 @@ export const visionPillars = [
     image: img.aj.pitchPresentation,
   },
   {
-    title: "Benchmarks",
-    body: "Establish exceptional standards for other clubs and join the National League as a professional team within five years.",
+    title: "Benchmarking",
+    body: "Establish exceptional standards for other clubs.",
     image: img.aj.delegationWelcome,
   },
   {
@@ -122,7 +142,7 @@ export const missionPillars = [
     body: "Give young boys and girls opportunities to lead productive lives by channelling their creative energy away from negative influences.",
   },
   {
-    title: "Football over addiction",
+    title: "Football addiction",
     body: "Our mission is to inspire young minds to move away from destructive influences and towards a passion for football, discipline and a purposeful future.",
   },
   {
@@ -182,7 +202,7 @@ export const partnership = {
   club: "Argentinos Juniors",
   nickname: "Semillero del Mundo — The World's Football Nursery",
   country: "Argentina",
-  body: "Renowned for cultivating exceptional football talent and shaping future stars on the global stage. Argentinos Juniors partners MCFC on coach education, methodology and international exposure for our young players.",
+  body: "Renowned for cultivating exceptional football talent and shaping future stars on the global stage. Argentinos Juniors collaborates with MCFC on coach education, methodology and international exposure for our young players.",
   benefits: [
     {
       title: "Coach education",

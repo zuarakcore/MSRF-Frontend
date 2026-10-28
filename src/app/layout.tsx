@@ -26,10 +26,10 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#000000",
+  themeColor: "#ffffff",
 };
 
-const themeScript = `(function(){try{var s=localStorage.getItem("mcfc-theme");if(s!=="light"){document.documentElement.classList.add("dark")}}catch(e){document.documentElement.classList.add("dark")}})();`;
+const themeScript = `(function(){try{if(localStorage.getItem("mcfc-theme")==="dark"){document.documentElement.classList.add("dark")}}catch(e){}})();`;
 
 export default function RootLayout({
   children,

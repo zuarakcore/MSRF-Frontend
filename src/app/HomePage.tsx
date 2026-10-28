@@ -1,12 +1,15 @@
 "use client";
 
 import Link from 'next/link';
+import { useEffect, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import { Reveal } from "@/components/site/Reveal";
 import type { RevealPreset } from "@/components/site/Reveal";
 import { PaymentSection } from "@/components/site/PaymentSection";
+import { Typewriter } from "@/components/site/Typewriter";
+import type { TypeSegment } from "@/components/site/Typewriter";
 import { ActionLink, ContentStatus, Eyebrow, Section, SectionHead, StatBlock, BallIcon } from "@/components/site/Primitives";
 import { useProgrammes, useTeamMembers } from "@/hooks/use-site-content";
 import type { Programme, TeamMember } from "@/lib/api";
@@ -22,6 +25,13 @@ import {
 
 export default Home;
 
+// Hero copy typed out after the 5-second film-only opening (the heading fades in between them).
+const heroKicker: TypeSegment[] = [{ text: club.kicker }];
+const heroBody: TypeSegment[] = [
+  { text: club.malayalam, className: "text-2xl font-bold text-accent md:text-3xl" },
+  { text: " a world class grassroots academy in Keralam, built to place Indian players on the global stage." },
+];
+
 function Home({ programmes: initialProgrammes, team: initialTeam }: { programmes?: Programme[] | undefined; team?: TeamMember[] | undefined }) {
   const programmes = useProgrammes(initialProgrammes);
   // Programmes with a date from today on, soonest first, shown as upcoming events.
@@ -30,16 +40,91 @@ function Home({ programmes: initialProgrammes, team: initialTeam }: { programmes
     .filter((p) => p.date && p.date >= today)
     .sort((a, b) => a.date!.localeCompare(b.date!));
   const team = useTeamMembers(initialTeam);
+  // The hero film tries to start with sound. Browsers usually block that until the visitor interacts, so it
+  // falls back to muted and unmutes on the first click, tap or key press; the button toggles it after that.
+  const heroVideo = useRef<HTMLVideoElement>(null);
+  const soundControls = useRef<HTMLDivElement>(null);
+  const [muted, setMuted] = useState(true);
+  // "Tap for sound" shows beside the speaker button until the sound has been on once.
+  const [heardSound, setHeardSound] = useState(false);
+  useEffect(() => {
+    if (!muted) setHeardSound(true);
+  }, [muted]);
+  // 1 = kicker types, 2 = heading fades in, 3 = description types, 4 = buttons.
+  const [typingStep, setTypingStep] = useState(1);
+  useEffect(() => {
+    if (typingStep !== 2) return;
+    const timer = window.setTimeout(() => setTypingStep((step) => Math.max(step, 3)), 900);
+    return () => window.clearTimeout(timer);
+  }, [typingStep]);
+  const toggleSound = () => {
+    const video = heroVideo.current;
+    if (!video) return;
+    video.muted = !video.muted;
+    if (!video.muted) void video.play().catch(() => {});
+    setMuted(video.muted);
+  };
+  useEffect(() => {
+    const video = heroVideo.current;
+    if (!video) return;
+
+    // Only completed clicks, taps and key presses count as permission for sound; a press that has only
+    // started (pointerdown/touchstart) does not, and unmuting on it gets refused or pauses the video.
+    const events = ["click", "touchend", "keydown"] as const;
+    const removeUnlock = () => events.forEach((e) => window.removeEventListener(e, unlock));
+    function unlock(e: Event) {
+      // A first press on the sound controls is handled by their own click.
+      if (soundControls.current?.contains(e.target as Node)) return;
+      removeUnlock();
+      if (!video) return;
+      video.muted = false;
+      setMuted(false);
+      void video.play().catch(() => {
+        video.muted = true;
+        setMuted(true);
+      });
+    }
+
+    const play = () =>
+      video.play().then(
+        () => setMuted(video.muted),
+        () => {
+          if (video.muted) return;
+          video.muted = true;
+          setMuted(true);
+          events.forEach((e) => window.addEventListener(e, unlock, { passive: true }));
+          void video.play().catch(() => {});
+        },
+      );
+
+    video.muted = false;
+    // Play only while the banner is on screen; pause once the visitor scrolls past.
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry?.isIntersecting) void play();
+        else video.pause();
+      },
+      { threshold: 0.25 },
+    );
+    observer.observe(video);
+    return () => {
+      observer.disconnect();
+      removeUnlock();
+    };
+  }, []);
 
   return (
     <>
       {/* Hero */}
       <section className="relative flex min-h-[100svh] items-end overflow-hidden">
-        <img
-          src={img.hero}
-          alt="Floodlit stadium pitch at night"
-          width={1920}
-          height={1088}
+        <video
+          ref={heroVideo}
+          src="/hero.mp4"
+          poster="/hero-poster.jpg"
+          loop
+          playsInline
+          preload="metadata"
+          aria-label="Malabar Challengers FC academy film"
           className="absolute inset-0 h-full w-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/40" />
@@ -48,26 +133,40 @@ function Home({ programmes: initialProgrammes, team: initialTeam }: { programmes
           style={{ background: "linear-gradient(to bottom, var(--accent), transparent 70%)" }}
         />
 
-        <div className="relative z-10 mx-auto w-full max-w-[1240px] px-6 pb-12 pt-28 md:px-10 md:pb-24 md:pt-36">
+        <div
+          className="relative z-10 mx-auto w-full max-w-[1240px] px-6 pb-12 pt-28 md:px-10 md:pb-24 md:pt-36"
+        >
           <Reveal>
             <div className="flex items-center gap-3">
               <BallIcon className="h-4 w-4 animate-[roll_4s_linear_infinite] text-accent" />
-              <p className="eyebrow">{club.kicker}</p>
+              <p className="eyebrow">
+                <Typewriter segments={heroKicker} start={typingStep >= 1} speed={30} onDone={() => setTypingStep((s) => Math.max(s, 2))} />
+              </p>
             </div>
           </Reveal>
           <Reveal delay={120}>
-            <h1 className="display-xl mt-6 max-w-4xl text-on-dark">
-              We create <span className="text-accent">professional</span> footballers
+            <h1
+              className={`display-xl mt-6 max-w-4xl text-on-dark transition-all duration-1000 ${
+                typingStep >= 2 ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
+              }`}
+            >
+              From the fields of Malabar to the colours of{" "}
+              <span className="bg-gradient-to-r from-[#FF9933] via-white to-[#138808] bg-clip-text text-transparent">
+                India
+              </span>
             </h1>
           </Reveal>
           <Reveal delay={220}>
             <p className="mt-7 max-w-xl text-lg leading-relaxed text-white/70">
-              {club.malayalam} — a world-class grassroots academy in Keralam, built to place Indian players on the
-              global stage.
+              <Typewriter segments={heroBody} start={typingStep >= 3} speed={22} onDone={() => setTypingStep((s) => Math.max(s, 4))} />
             </p>
           </Reveal>
           <Reveal delay={320}>
-            <div className="mt-8 flex flex-wrap items-center gap-3 md:mt-10">
+            <div
+              className={`mt-8 flex flex-wrap items-center gap-3 transition-all duration-700 md:mt-10 ${
+                typingStep >= 4 ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-4 opacity-0"
+              }`}
+            >
               <ActionLink href="/programs">Join the academy</ActionLink>
               <ActionLink href="/gallery" variant="glass">
                 Watch the academy
@@ -77,11 +176,51 @@ function Home({ programmes: initialProgrammes, team: initialTeam }: { programmes
 
         </div>
 
-        <div className="absolute bottom-8 right-8 hidden items-center gap-3 text-white/50 md:flex">
-          <span className="text-[0.65rem] uppercase tracking-[0.3em]">Scroll</span>
-          <span className="block h-12 w-px overflow-hidden bg-white/20">
-            <span className="block h-4 w-px animate-[float_2.6s_ease-in-out_infinite] bg-accent" />
-          </span>
+        <div className="absolute bottom-6 right-6 z-10 flex items-center gap-6 text-white/50 md:bottom-8 md:right-8">
+          <div ref={soundControls} className="flex items-center gap-3">
+            {muted && !heardSound ? (
+              <button
+                type="button"
+                onClick={toggleSound}
+                className="relative flex animate-[nudge_1.6s_ease-in-out_infinite] items-center gap-2 rounded-full border-2 border-accent bg-transparent py-2 pl-4 pr-3 text-xs font-bold uppercase tracking-[0.12em] text-accent transition hover:bg-accent/15"
+              >
+                Tap for sound
+                {/* Bouncing equaliser bars. */}
+                <span className="flex h-3.5 items-end gap-[3px]" aria-hidden="true">
+                  {[0, 0.25, 0.5].map((delay) => (
+                    <span
+                      key={delay}
+                      className="h-full w-[3px] origin-bottom rounded-full bg-accent"
+                      style={{ animation: `eq 0.9s ease-in-out ${delay}s infinite` }}
+                    />
+                  ))}
+                </span>
+                {/* Outlined pointer towards the speaker button. */}
+                <span className="absolute -right-[7px] top-1/2 h-2.5 w-2.5 -translate-y-1/2 rotate-45 border-r-2 border-t-2 border-accent" />
+              </button>
+            ) : null}
+            <button
+              type="button"
+              onClick={toggleSound}
+              aria-label={muted ? "Turn sound on" : "Turn sound off"}
+              aria-pressed={!muted}
+              className="relative flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-black/40 text-white backdrop-blur-md transition-colors hover:border-accent hover:text-accent"
+            >
+              {muted && !heardSound ? (
+                <span className="absolute inset-0 animate-ping rounded-full border-2 border-accent" aria-hidden="true" />
+              ) : null}
+              <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M11 5L6 9H2v6h4l5 4V5z" />
+                {muted ? <path d="M23 9l-6 6M17 9l6 6" /> : <path d="M15.5 8.5a5 5 0 010 7M19 5a10 10 0 010 14" />}
+              </svg>
+            </button>
+          </div>
+          <div className="hidden items-center gap-3 md:flex">
+            <span className="text-[0.65rem] uppercase tracking-[0.3em]">Scroll</span>
+            <span className="block h-12 w-px overflow-hidden bg-white/20">
+              <span className="block h-4 w-px animate-[float_2.6s_ease-in-out_infinite] bg-accent" />
+            </span>
+          </div>
         </div>
       </section>
 
@@ -181,7 +320,7 @@ function Home({ programmes: initialProgrammes, team: initialTeam }: { programmes
           <Reveal>
             <SectionHead
               eyebrow="Training programmes"
-              title="Pathways from first touch to professional"
+              title="Pathways from first touch to becoming a professional"
             />
           </Reveal>
           <Reveal delay={120}>
@@ -222,12 +361,12 @@ function Home({ programmes: initialProgrammes, team: initialTeam }: { programmes
           <div className="group relative overflow-hidden rounded-[3rem] bg-card border border-border shadow-2xl">
             {/* Background Image with Overlay */}
             <img
-              src={img.aj.teamStand}
-              alt="Argentinos Juniors delegation with academy players and coaches on the pitch"
+              src="/ar-maradona.jpeg"
+              alt="Diego Maradona in the Argentinos Juniors kit on the pitch"
               loading="lazy"
-              className="absolute inset-0 h-full w-full object-cover opacity-60 transition-transform duration-1000 group-hover:scale-105"
+              className="absolute inset-0 h-full w-full object-cover object-top opacity-60 transition-transform duration-1000 group-hover:scale-105"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/75 to-black/30" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/60 to-black/30" />
 
             <div className="relative grid items-center gap-8 p-8 md:gap-12 md:p-12 lg:grid-cols-[1.5fr_1fr] lg:p-20">
               {/* Text Content */}
@@ -247,10 +386,18 @@ function Home({ programmes: initialProgrammes, team: initialTeam }: { programmes
                   {partnership.body}
                 </p>
                 
-                <div className="mt-8 md:mt-12">
-                  <ActionLink href="/partner" variant="accent">
-                    Inside the partnership
-                  </ActionLink>
+                <div className="mt-8 flex flex-col items-start md:mt-12">
+                  <p className="text-xs font-bold uppercase tracking-[0.25em] text-accent">
+                    Buenos Aires · {partnership.country}
+                  </p>
+                  <a
+                    href="https://argentinosjuniors.com.ar/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-3 text-xs tracking-wide text-accent hover:underline underline-offset-4 transition-opacity duration-300 hover:opacity-80"
+                  >
+                    argentinosjuniors.com.ar ↗
+                  </a>
                 </div>
               </Reveal>
 
@@ -265,9 +412,11 @@ function Home({ programmes: initialProgrammes, team: initialTeam }: { programmes
                       className="h-48 sm:h-64 w-auto object-contain drop-shadow-2xl transition-transform duration-700 group-hover:scale-110"
                     />
                   </div>
-                  <p className="mt-8 text-center lg:text-right text-xs font-bold uppercase tracking-[0.25em] text-accent">
-                    Buenos Aires · {partnership.country}
-                  </p>
+                  <div className="mt-8">
+                    <ActionLink href="/partner" variant="accent">
+                      Inside the partnership
+                    </ActionLink>
+                  </div>
                 </div>
               </Reveal>
             </div>

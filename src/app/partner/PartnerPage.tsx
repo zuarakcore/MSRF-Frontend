@@ -44,8 +44,8 @@ function Partner() {
           </>
         }
         body={partnership.body}
-        image={img.aj.delegationSeated}
-        alt="Argentinos Juniors delegation with MSRF leadership in Kozhikode"
+        image={img.partnerBanner}
+        alt="Argentinos Juniors legends in the club's red and white kits on a stadium pitch at sunset"
         imagePosition="top"
       />
 
@@ -53,10 +53,18 @@ function Partner() {
         <div className="grid items-stretch gap-16 lg:grid-cols-[0.8fr_1.1fr]">
           <Reveal className="h-full">
             <div
-              className="glass flex h-full w-full flex-col items-center justify-center rounded-[2.5rem] p-12 shadow-2xl transition-transform duration-700 hover:scale-[1.02]"
+              className="glass relative flex h-full w-full flex-col items-center justify-center overflow-hidden rounded-[2.5rem] p-12 shadow-2xl transition-transform duration-700 hover:scale-[1.02]"
               style={{ borderColor: "color-mix(in oklab, var(--argentina) 40%, transparent)" }}
             >
-              <div className="animate-[float_8s_ease-in-out_infinite] flex flex-col items-center justify-center">
+              <img
+                src="/ma.jpeg"
+                alt=""
+                aria-hidden="true"
+                loading="lazy"
+                className="absolute inset-0 h-full w-full object-cover object-top"
+              />
+              <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/70 to-black/85" />
+              <div className="relative animate-[float_8s_ease-in-out_infinite] flex flex-col items-center justify-center">
                 <img
                   src={img.argentinosCrest}
                   alt="Argentinos Juniors club crest"
@@ -65,7 +73,7 @@ function Partner() {
                   height={264}
                   className="h-52 w-auto object-contain drop-shadow-2xl"
                 />
-                <p className="mt-8 text-center text-xs font-bold uppercase tracking-[0.24em] text-muted-foreground">
+                <p className="mt-8 text-center text-xs font-bold uppercase tracking-[0.24em] text-white/80">
                   Buenos Aires · {partnership.country}
                 </p>
                 <a
@@ -122,7 +130,7 @@ function Partner() {
           <SectionHead
             eyebrow="A Legacy of Developing Champions"
             title="From Maradona to Mac Allister  a lineage of greatness"
-            body="From Diego Maradona to Alexis Mac Allister, Argentinos Juniors has a distinguished history of developing footballers who have gone on to represent Argentina and compete at the highest level of the sport with 30 to 40%. Its renowned youth academy, known as Semillero del Mundo — World's Football Nursery — reflects its long-standing commitment to nurturing young talent."
+            body="From Diego Maradona to Alexis Mac Allister, Argentinos Juniors has a distinguished history of developing footballers who have gone on to represent Argentina and compete at the highest level of the sport. Its renowned youth academy, known as Semillero del Mundo — World's Football Nursery — reflects its long-standing commitment to nurturing young talent."
             align="center"
           />
         </Reveal>
@@ -136,7 +144,7 @@ function Partner() {
               },
               {
                 name: "Alexis Mac Allister",
-                note: "World Cup winner with Argentina in 2022 and current Liverpool midfielder, Mac Allister is a product of the celebrated Semillero del Mundo youth system.",
+                note: "World Cup winner with Argentina in 2022 and 2026, Mac Allister is a product of the celebrated Semillero del Mundo youth system.",
                 emoji: "🏆",
               },
               {
@@ -170,17 +178,17 @@ function Partner() {
             {
               title: "Accredited coaches",
               body: "Our staff train under AJ-designed, internationally accredited programmes and are re-assessed each season.",
-              image: img.aj.delegationWelcome,
+              image: img.partnerCoaches,
             },
             {
               title: "Shared methodology",
               body: "Session plans, drills and player evaluation forms follow the AJ model, adapted to Indian conditions.",
-              image: img.aj.rainCelebrationWide,
+              image: img.partnerMethodology,
             },
             {
               title: "Exposure trips",
               body: "Exchange visits, camps and friendly fixtures give selected players time in a professional environment.",
-              image: img.aj.maradonaBook,
+              image: img.partnerExposure,
             },
           ].map((item, index) => (
             <Reveal key={item.title} delay={index * 100}>

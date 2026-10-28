@@ -28,6 +28,10 @@ export function SiteHeader() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Public pages open on a dark photo banner in both themes, so the bare header needs light text there.
+  const hasDarkHero = !pathname?.startsWith("/auth") && !pathname?.startsWith("/admin");
+  const onDark = hasDarkHero && !scrolled && !open;
+
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-700 ${
@@ -38,7 +42,7 @@ export function SiteHeader() {
         <div
           className={`flex items-center justify-between gap-4 rounded-full px-4 py-2.5 transition-all duration-700 ${
             scrolled || open ? "glass" : "border border-transparent"
-          }`}
+          } ${onDark ? "text-white" : ""}`}
         >
           <Link href="/" className="flex items-center gap-3" onClick={() => setOpen(false)}>
             <img
@@ -52,7 +56,11 @@ export function SiteHeader() {
               <span className="block font-[family-name:var(--font-display)] text-sm font-extrabold uppercase tracking-tight">
                 Malabar Challengers
               </span>
-              <span className="block text-[0.65rem] uppercase tracking-[0.22em] text-muted-foreground">
+              <span
+                className={`block text-[0.65rem] uppercase tracking-[0.22em] ${
+                  onDark ? "text-white/60" : "text-muted-foreground"
+                }`}
+              >
                 Football Club
               </span>
             </span>
@@ -68,8 +76,12 @@ export function SiteHeader() {
                   <Link
                     key={item.to}
                     href={item.to}
-                    className={`accent-underline text-[0.82rem] font-medium transition-colors hover:text-foreground ${
-                      isActive ? "text-accent" : "text-muted-foreground"
+                    className={`accent-underline text-[0.82rem] font-medium transition-colors ${
+                      isActive
+                        ? "text-accent"
+                        : onDark
+                          ? "text-white/70 hover:text-white"
+                          : "text-muted-foreground hover:text-foreground"
                     }`}
                   >
                     {item.label}
@@ -93,7 +105,7 @@ export function SiteHeader() {
               aria-label="Toggle menu"
               aria-expanded={open}
               onClick={() => setOpen((v) => !v)}
-              className="glass flex h-9 w-9 items-center justify-center rounded-full lg:hidden"
+              className="glass flex h-9 w-9 items-center justify-center rounded-full text-foreground lg:hidden"
             >
               <svg
                 viewBox="0 0 24 24"

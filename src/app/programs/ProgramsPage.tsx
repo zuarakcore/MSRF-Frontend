@@ -23,12 +23,15 @@ function Programs({ programmes: initialProgrammes }: { programmes?: Programme[] 
           </>
         }
         body="From a first controlled touch at six to a professional trial at eighteen — structured blocks, accredited coaches and measurable progress at every stage."
-        image={img.aj.rainCelebrationWide}
-        alt="Academy players celebrating together on the pitch"
-        imagePosition="top"
+        image={img.programmesBanner}
+        alt="Coaches leading a beach training session with academy players by the sea"
+        imagePosition="bottom"
       />
 
       <Section>
+        <Reveal>
+          <SectionHead eyebrow="Programmes" title="Current programmes" />
+        </Reveal>
         {isPending ? (
           <ContentStatus>Loading programmes…</ContentStatus>
         ) : isError ? (
@@ -38,7 +41,7 @@ function Programs({ programmes: initialProgrammes }: { programmes?: Programme[] 
         ) : !programs?.length ? (
           <ContentStatus>New programmes will be announced soon.</ContentStatus>
         ) : null}
-        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+        <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
           {programs?.map((program, index) => (
             <Reveal key={program.id} delay={(index % 3) * 90}>
               <article className="glass lift flex h-full flex-col rounded-3xl p-8">
@@ -89,8 +92,8 @@ function Programs({ programmes: initialProgrammes }: { programmes?: Programme[] 
           <Reveal delay={140}>
             <div className="overflow-hidden rounded-[2rem] border border-border">
               <img
-                src={img.training[2]}
-                alt="Coach instructing academy players"
+                src={img.partnerCoaches}
+                alt="Academy coaching staff lined up on the training pitch"
                 loading="lazy"
                 className="h-full w-full object-cover"
               />
