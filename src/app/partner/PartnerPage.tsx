@@ -144,7 +144,7 @@ function Partner() {
               },
               {
                 name: "Alexis Mac Allister",
-                note: "World Cup winner with Argentina in 2022 and 2026, Mac Allister is a product of the celebrated Semillero del Mundo youth system.",
+                note: "World Cup winner with Argentina in 2022 who also played at the 2026 World Cup, Mac Allister is a product of the celebrated Semillero del Mundo youth system.",
                 emoji: "🏆",
               },
               {
