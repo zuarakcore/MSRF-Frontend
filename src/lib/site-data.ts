@@ -202,7 +202,7 @@ export const partnership = {
   club: "Argentinos Juniors",
   nickname: "Semillero del Mundo — The World's Football Nursery",
   country: "Argentina",
-  body: "Renowned for cultivating exceptional football talent and shaping future stars on the global stage. Argentinos Juniors collaborates with MCFC on coach education, methodology and international exposure for our young players.",
+  body: "Renowned for grooming exceptional football talents and shaping future stars for the global stage. Argentinos Juniors collaborates with MCFC on coach education, methodology and international exposure for our young players.",
   benefits: [
     {
       title: "Coach education",
@@ -210,7 +210,7 @@ export const partnership = {
     },
     {
       title: "Methodology transfer",
-      body: "The AJ training model adapted to Indian conditions across every academy age group.",
+      body: "The AJ training model adapted to Indian conditions across every age group.",
     },
     {
       title: "Player development",

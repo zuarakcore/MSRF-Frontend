@@ -22,7 +22,7 @@ function Programs({ programmes: initialProgrammes }: { programmes?: Programme[] 
             Every age group has a <span className="text-accent">clear pathway</span>
           </>
         }
-        body="From a first controlled touch at six to a professional trial at eighteen — structured blocks, accredited coaches and measurable progress at every stage."
+        body="From a clumsy touch at six to a true professional at eighteen — structured blocks, accredited coaches and measurable progress at every stage."
         image={img.programmesBanner}
         alt="Coaches leading a beach training session with academy players by the sea"
         imagePosition="bottom"

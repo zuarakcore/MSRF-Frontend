@@ -253,8 +253,8 @@ function Home({ programmes: initialProgrammes, team: initialTeam }: { programmes
           <Reveal>
             <SectionHead
               eyebrow="About the club"
-              title={<>A not-for-profit built to change Indian football</>}
-              body={`${club.foundation} is a Section 8 not-for-profit founded by retired civil servants and their associates, focused solely on promoting football in Keralam and across India. MSRF owns and operates ${club.short}.`}
+              title={<>A not for profit built to change Indian football</>}
+              body={`${club.foundation} is a Section 8 Company, not for profit, founded by retired civil servants and their associates, focused solely on promoting football in Keralam and across India. MSRF owns and operates ${club.short}.`}
             />
             <div className="mt-8 flex flex-wrap gap-3 md:mt-10">
               <ActionLink href="/about" variant="ghost">

@@ -32,8 +32,14 @@ function About({ team: initialTeam }: { team?: TeamMember[] | undefined }) {
           <Reveal>
             <SectionHead
               eyebrow="Who we are"
-              title="Owned by a foundation, driven by shareholders"
-              body="MSRF owns and operates Malabar Challengers Football Club. Because we are not-for-profit, every rupee raised returns to coaching, facilities, nutrition and welfare for the children in our care."
+              title={
+                // Smaller than the usual section title so each half fits on one line in this half-width column.
+                <span className="block text-[clamp(1.5rem,3vw,2.6rem)] leading-[1.05]">
+                  <span className="block">Owned by shareholders,</span>
+                  <span className="block">not driven by profit motive</span>
+                </span>
+              }
+              body="MSRF owns and operates Malabar Challengers Football Club. Because we are a not-for-profit, every rupee raised returns to coaching, facilities, nutrition and welfare for the children in our care."
             />
             <ul className="mt-10 space-y-4">
               {trustPoints.map((point) => (
@@ -72,8 +78,8 @@ function About({ team: initialTeam }: { team?: TeamMember[] | undefined }) {
           <Reveal delay={140}>
             <SectionHead
               eyebrow="Our dream"
-              title="One of our own, one day in India blue"
-              body="Every child who steps onto our pitch carries a dream, and so do we. Ours is that one day a player who grew up in our academy pulls on the India jersey, first for the Under-15 or Under-20 team, and then beyond."
+              title="One of our own in an Indian team"
+              body="Every child who steps onto our pitch carries a dream, and so do we. We dream of the day when a player who grew up in our academy puts on the Indian jersey, first for the Under-15 team, then for the Under-17 and Under-20 teams, and beyond."
             />
             <p className="mt-6 text-sm leading-relaxed text-muted-foreground">
               It is not a promise. It is what we work towards in every training session, every match and every early
@@ -108,7 +114,7 @@ function About({ team: initialTeam }: { team?: TeamMember[] | undefined }) {
 
       <Section>
         <Reveal>
-          <SectionHead eyebrow="Our vision" title="Where we intend to take Indian football" />
+          <SectionHead eyebrow="Our vision" title="To lead Indian football into a bright future" />
         </Reveal>
         <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {visionPillars.map((pillar, index) => (

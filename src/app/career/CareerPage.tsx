@@ -28,7 +28,7 @@ export default function CareerPage({ jobs: initialJobs }: { jobs?: Job[] | undef
             Join our <span className="text-accent">mission</span>
           </>
         }
-        body="We are always looking for passionate, driven professionals to help us build a world-class football academy and shape the future of Indian football."
+        body="We are always looking for passionate professionals who can help us build a world-class football academy and shape the future of Indian football."
         image={img.careerBanner}
         alt="Coaches leading a training session with academy players on a red-earth pitch lined with palm trees"
         imagePosition="bottom"
@@ -51,7 +51,7 @@ export default function CareerPage({ jobs: initialJobs }: { jobs?: Job[] | undef
           </ContentStatus>
         ) : !jobs?.length ? (
           <ContentStatus className="mt-16">
-            There are no open positions at the moment. Please check back soon.
+            There are no open positions at the moment. Please check later.
           </ContentStatus>
         ) : null}
 

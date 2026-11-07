@@ -91,7 +91,7 @@ function Partner() {
             <SectionHead
               eyebrow="The World's Football Nursery"
               title="A club that has produced global icons"
-              body="Argentinos Juniors is renowned for cultivating exceptional football talent and shaping future stars on the global stage. Their academy philosophy — technical mastery first, competitive intelligence second — now underpins the way we coach in Keralam."
+              body="Argentinos Juniors is renowned for grooming exceptional football talents and shaping future stars for the global stage. Their coaching philosophy — technical mastery first, competitive intelligence second."
             />
             <div className="mt-10 grid gap-4 sm:grid-cols-2">
               {partnership.benefits.map((benefit) => (
@@ -139,12 +139,12 @@ function Partner() {
             {[
               {
                 name: "Diego Maradona",
-                note: "Widely regarded as one of the greatest footballers of all time, Maradona began his professional career at Argentinos Juniors before achieving global superstardom.",
+                note: "Widely regarded as one of the greatest footballers of all time. Maradona began his footballing career at the age of 9 at Argentinos Juniors before achieving global superstardom.",
                 emoji: "🐐",
               },
               {
                 name: "Alexis Mac Allister",
-                note: "World Cup winner with Argentina in 2022 who also played at the 2026 World Cup, Mac Allister is a product of the celebrated Semillero del Mundo youth system.",
+                note: "A member of Argentina's World Cup-winning team in 2022 and of the runner-up team at the 2026 World Cup, Mac Allister is a product of the celebrated Argentinos Juniors youth academy.",
                 emoji: "🏆",
               },
               {
@@ -177,7 +177,7 @@ function Partner() {
           {[
             {
               title: "Accredited coaches",
-              body: "Our staff train under AJ-designed, internationally accredited programmes and are re-assessed each season.",
+              body: "Our coaching staff are well trained by AJ experts in proven youth coaching methodology.",
               image: img.partnerCoaches,
             },
             {
@@ -187,7 +187,7 @@ function Partner() {
             },
             {
               title: "Exposure trips",
-              body: "Exchange visits, camps and friendly fixtures give selected players time in a professional environment.",
+              body: "Exchange visits, camps and friendly fixtures give selected players and coaches golden opportunities to train and play in a professional environment.",
               image: img.partnerExposure,
             },
           ].map((item, index) => (
@@ -221,7 +221,7 @@ function Partner() {
                 "linear-gradient(120deg, color-mix(in oklab, var(--argentina) 16%, transparent), transparent 65%)",
             }}
           >
-            <h2 className="display-lg mx-auto max-w-2xl">Train inside a global methodology</h2>
+            <h2 className="display-lg mx-auto max-w-2xl">Train using global methodology</h2>
             <p className="mx-auto mt-6 max-w-xl text-lg text-muted-foreground">
               Places in each age group are limited so coaching ratios stay small. Speak to us about the next intake.
             </p>
