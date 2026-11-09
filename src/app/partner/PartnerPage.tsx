@@ -144,7 +144,7 @@ function Partner() {
               },
               {
                 name: "Alexis Mac Allister",
-                note: "A member of Argentina's World Cup-winning team in 2022 and of the runner-up team at the 2026 World Cup, Mac Allister is a product of the celebrated Argentinos Juniors youth academy.",
+                note: "A member of World Cup winning Argentinan Team in 2022, again as a runner up team member in 2026 World Cup, is a product of celebrated Argentinos Juniors youth academy.",
                 emoji: "🏆",
               },
               {
