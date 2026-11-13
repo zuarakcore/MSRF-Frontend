@@ -150,10 +150,11 @@ function Home({ programmes: initialProgrammes, team: initialTeam }: { programmes
                 typingStep >= 2 ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
               }`}
             >
-              From the fields of Malabar to the colours of{" "}
+              From the Football Fields of Malabar to wearing the{" "}
               <span className="bg-gradient-to-r from-[#FF9933] via-white to-[#138808] bg-clip-text text-transparent">
-                India
-              </span>
+                Indian
+              </span>{" "}
+              Colours
             </h1>
           </Reveal>
           <Reveal delay={220}>
