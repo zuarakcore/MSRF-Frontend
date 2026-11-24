@@ -533,7 +533,7 @@ function Home({ programmes: initialProgrammes, team: initialTeam }: { programmes
             <SectionHead
               eyebrow="Governance"
               title="Led by people who have run states"
-              body="Retired civil servants, diplomats and an India captain — governing the academy with the standards they brought to public service."
+              body="Retired civil servants, diplomats and the professionals — governing the academy with the standards they brought to public service."
             />
           </Reveal>
           <Reveal delay={120}>
